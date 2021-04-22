@@ -22,14 +22,11 @@ toc: true
 - [fillfactor 填充因子](/postgres/fillfactor)
 - [TOAST 技术](/postgres/toast)
 - [hot update](/postgres/hotupdate)
-- [checkpoint](/postgres/checkpoint)
 - [tablespace 表空间](/postgres/tablespace)
 - [锁机制](/postgres/pg_lock)
 - [锁等待](/postgres/lock_wait)
 - [cluster 聚族表](/postgres/cluster)
 - [咨询锁 adlock](/postgres/adlock)
-- [数据库视图之 pg_stat_activity](/postgres/pg_stat_activity)
-- 数据库试图之 pg_stat_bgwriter
 - [数据库年龄](/postgres/pgage)
 - [方法和函数](/postgres/functionsandoperators)
 - [高级SQL](/postgres/high_level_sql)
@@ -65,6 +62,20 @@ toc: true
 - [找回supper user 权限](/postgres/reback_supper_user)
 - [分区表](/postgres/partition)
 
+## 常用视图
+
+- [数据库视图之 pg_stat_activity](/postgres/view_pg_stat_activity)
+- [数据库试图之 pg_stat_bgwriter](/postgres/view_pg_stat_bgwriter)
+
+## 服务进程
+
+- [CheckPoint](/postgres/checkpoint)
+- [Backgroud Writer](/postgres/bgwriter)
+- wal writer
+- stat collector
+- logger 
+- [vacuum](/postgres/vacuum)  
+
 ## 备份恢复
 
 - [备份&恢复](/postgres/backup_restore)
@@ -72,6 +83,7 @@ toc: true
 - [时间点恢复](/postgres/pitr)
 - [误操作闪回](/postgres/reback)
 - [使用PG_RMAN管理备份恢复](/postgres/pg_rman)
+- [wal-g 应用](/postgres/wal-g)
 - 使用pgbakrest备份恢复
 
 ## 高可用
@@ -81,6 +93,7 @@ toc: true
 - [PG主从切换 pg_rewind](/postgres/pg_rewind)
 - [PG高可用Patroni搭建](/postgres/patroni)
 - [PG高可用Patroni管理进阶](/postgres/patroni02)
+- [PG高可用Repmgr搭建](/postgres/repmgr)
 
 ## 索引
 
@@ -88,6 +101,7 @@ toc: true
 - [引起索引失效](/postgres/index-invalid)
 - [pg_trgm的gist和gin索引加速字符匹配查询](/postgres/pg_trgm)
 - [Bloom 索引](/postgres/index-bloom)
+- [创建假设索引](https://github.com/HypoPG/hypopg)
 
 ## 流数据库
 
