@@ -39,3 +39,9 @@ reference 参考
 constant development 持续发展
 
 convention 约定, 习惯
+
+collateral n. 	抵押物; 担保品;i
+
+mandatory 强制的
+
+simulation 模拟
