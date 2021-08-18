@@ -146,3 +146,10 @@ toc: true
 - [PostgreSQL 11 新特性汇总](https://postgres.fun/20181102084300.html)
 - [PostgreSQL 12 新特性汇总](https://postgres.fun/20190809161300.html)
 - [PostgreSQL 13 新特性汇总](https://postgres.fun/20200724165800.html)
+
+postgres 13
+```
+wal_keep_segments 已经取消，改用 wal_keep_size
+
+wal_keep_size = wal_keep_segments * wal_segment_size(16MB) 
+```
