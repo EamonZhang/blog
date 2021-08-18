@@ -169,3 +169,5 @@ key 可以挂在特定的槽位上 tag指定
 两个特殊指令 moved asking
 
 只能使用第0号库。不像独立的redis 有16 个库
+
+更多参考 https://www.cnblogs.com/williamjie/p/11132211.html
