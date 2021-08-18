@@ -153,3 +153,19 @@ r_ret = slave.get('foo')
 print(r_ret)
 # 输出：bar
 ```
+
+## Cluster
+
+去中心化
+
+16384 个槽位，槽位信息存储在每个节点，纠正机制
+
+key 可以挂在特定的槽位上 tag指定
+
+槽位迁移
+
+每个节点之间采用Gossip协议
+
+两个特殊指令 moved asking
+
+只能使用第0号库。不像独立的redis 有16 个库
