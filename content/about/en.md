@@ -45,3 +45,7 @@ collateral n. 	抵押物; 担保品;i
 mandatory 强制的
 
 simulation 模拟
+
+irrespective 不用关心的
+
+optimally 最优
