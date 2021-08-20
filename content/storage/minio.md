@@ -3,7 +3,7 @@ title: "minio 轻量级对象存储"
 date: 2019-03-18T16:59:48+08:00
 draft: false
 toc: true 
-categories: ['minio']
+categories: ['存储']
 tags: []
 ---
 
@@ -212,4 +212,17 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets: ['localhost:9000']
+``` 
+
+## 应用案例
+
+自动同步备份数据
 ```
+mc mirror --force --remove --watch  pgsql/data/ myminio/pgsqlbkp
+```
+
+[rclone备份应用参考](../rclone/)
+
+
+
+
