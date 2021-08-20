@@ -117,6 +117,21 @@ systemctl restart minio
 systemctl enable minio
 ```
 
+#### 压缩存储
+
+查看可压缩类型
+```
+mc admin config get myminio compression
+compression enable=off allow_encryption=off extensions=.txt,.log,.csv,.json,.tar,.xml,.bin mime_types=text/*,application/json,application/xml,binary/octet-stream 
+```
+
+开启压缩
+```
+export MINIO_COMPRESS="on"
+export MINIO_COMPRESS_EXTENSIONS=".pdf,.doc"
+export MINIO_COMPRESS_MIME_TYPES="application/pdf"
+```
+
 #### 查看日志
 ```
 tail -f /var/log/
@@ -125,6 +140,10 @@ tail -f /var/log/
 #### 控制台管理
 
 在浏览器中访问 http://192.168.6.14:19000
+
+#### 用户及权限管理
+
+略
 
 #### ningx 代理
 
