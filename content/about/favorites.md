@@ -18,3 +18,5 @@ LSM（Log-Structured Merge-Trees）和 B+ 树相比，是牺牲了部分读的�
 - [定时任务] (gocron)
 
 - [redis memcache 缓存管理平台](https://github.com/bilibili/overlord)
+
+- [一个可打包你所有想象的在线文档管理系统](https://www.showdoc.com.cn/)
