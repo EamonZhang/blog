@@ -150,12 +150,46 @@ skip-name-resolve # 跳过对连接的客户端进行DNS反向解析
 
 ## 数据库备份 
 
-```
--- 数据导出
-mysqldump -h 10.1.88.74 -u custom -P 3306 --databases sbtest  -v -p > backup.sql
+#### 物理备份
+xtrabackup
 
--- 数据导入
-mysql -h 10.1.88.74 -u custom -P 3306  -D sbtest -p < backup.sql 
+
+#### 逻辑备份
+```
+-- 备份所有库 --all-databases 或 -A
+mysqldump -uroot -pxxxxxx --all-databases > /tmp/all_database.sql
+
+-- 备份部分数据库 --databases 或 -B
+mysqldump -uroot -pxxxxxx --databases testdb1 testdb2 > /tmp/testdb.sql
+
+-- 备份一个库中的多个表
+mysqldump -uroot -pxxxxxx testdb tb1 tb2 tb3 > /tmp/tb.sql
+
+-- 备份一个表中的部分数据
+mysqldump -uroot -pxxxxxx testdb tb1 --where=" create_time >= '2019-08-01 00:00:00' " > /tmp/tb1.sql
+
+-- 备份一个库中的表（排除部分表）--ignore-table
+mysqldump -uroot -pxxxxxx testdb --ignore-table=testdb.tb1 > /tmp/testdb.sql
+
+
+-- mysqldump备份默认是不包含存储过程，自定义函数及事件
+-- --routines 或 -R 选项来备份存储过程及函数，使用 --events 或 -E 参数来备份事件
+mysqldump -uroot -pxxxxxx -R -E --databases testdb > /tmp/testdb.sql
+
+-- InnoDB 引擎备份不锁表  --single-transaction 
+mysqldump -uroot -pxxxxxx --single-transaction --databases testdb > /tmp/testdb.sql
+
+
+-- 数据恢复
+mysql -uroot -pxxxxxx < /tmp/all_database.sql
+
+-- 在全量恢复的备份中恢复部分库
+sed -n '/^-- Current Database: `testdb`/,/^-- Current Database: `/p' all_databases.sql > testdb.sql
+
+-- 只恢复单库备份中的一张表
+cat testdb.sql | sed -e '/./{H;$!d;}' -e 'x;/CREATE TABLE `tb1`/!d;q' > /tmp/tb1_jiegou.sql
+cat testdb.sql | grep --ignore-case  'insert into `tb1`' > /tmp/tb1_data.sql
+
 ```
 
 ## 状态查看

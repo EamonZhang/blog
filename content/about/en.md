@@ -49,3 +49,7 @@ simulation 模拟
 irrespective 不用关心的
 
 optimally 最优
+
+from scratch 从零开始
+
+
