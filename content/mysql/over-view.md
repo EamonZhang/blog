@@ -49,7 +49,6 @@ mysql  Ver 8.0.26 for Linux on x86_64 (MySQL Community Server - GPL)
 数据库命令
 ```
 mysql>help show
-
 ```
 
 ## 权限管理 
