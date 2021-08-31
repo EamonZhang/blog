@@ -81,7 +81,7 @@ for log in $logs
 vi /etc/docker/daemon.json
 ```
 "log-driver":"json-file",
-  "log-opts":{ "max-size" :"50m","max-file":"1"}
+"log-opts":{ "max-size" :"50m","max-file":"1"}
 ```
 
 
