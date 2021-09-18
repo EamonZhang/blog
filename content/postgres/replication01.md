@@ -362,3 +362,21 @@ pg_receivewal
 ```
 
 备份增量wal日志，并可压缩备份。结合wal-g 做数据备份
+
+## 主从延迟查看
+
+主库查看/字节大小
+
+```
+#数据延迟
+select pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)/(1024/1024) as latency_mb from pg_stat_replication ;
+
+#wal 不同阶段延迟
+select pg_wal_lsn_diff(pg_current_wal_lsn(),sent_lsn)/(1024/1024) as sent_latency_mb,pg_wal_lsn_diff(pg_current_wal_lsn(),write_lsn)/(1024/1024) as write_latency_mb ,pg_wal_lsn_diff(pg_current_wal_lsn(),flush_lsn)/(1024/1024) as flush_latency_mb,pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)/(1024/1024) as replay_latency_mb from pg_stat_replication ;
+```
+
+从库查看/时间
+
+```
+select now() - pg_last_xact_replay_timestamp();
+```
