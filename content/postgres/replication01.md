@@ -369,10 +369,11 @@ pg_receivewal
 
 ```
 #数据延迟
-select pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)/(1024/1024) as latency_mb from pg_stat_replication ;
+select pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)) as latency from pg_stat_replication ;
 
 #wal 不同阶段延迟
-select pg_wal_lsn_diff(pg_current_wal_lsn(),sent_lsn)/(1024/1024) as sent_latency_mb,pg_wal_lsn_diff(pg_current_wal_lsn(),write_lsn)/(1024/1024) as write_latency_mb ,pg_wal_lsn_diff(pg_current_wal_lsn(),flush_lsn)/(1024/1024) as flush_latency_mb,pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)/(1024/1024) as replay_latency_mb from pg_stat_replication ;
+select pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),sent_lsn)) as sent_latency, pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),write_lsn)) as write_latency ,pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),flush_lsn)) as flush_latency,pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)) as replay_latency from pg_stat_replication ;
+
 ```
 
 从库查看/时间
