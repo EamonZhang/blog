@@ -77,8 +77,13 @@ useradd -g minio minio
 ```
 
 #### 设置存储位置用户权限
+```
 chown minio:minio /data/ -R
-
+```
+#### 设置可执行服务所属用户组
+```
+chown minio:minio /usr/local/bin/minio
+```
 #### 配置管理
 vi /etc/minio.conf 
 ```
