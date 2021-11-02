@@ -274,6 +274,16 @@ Active response
 
 略
 
+## agent 管理
+
+在 manager 端，管理命令
+
+可以对`agent`进行查看,添加，删除操作
+```
+/var/ossec/bin/agent_control
+/var/ossec/bin/manage_agents
+```
+
 ## 配置说明
 
 以上配置正确姿势
