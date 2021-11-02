@@ -220,22 +220,29 @@ vulnerability detector
 默认不开启
 
 ```
-{
-  "vulnerability-detector": {
-    "enabled": "yes",
-    "run_on_start": "yes",
-    "interval": 300,
-    "ignore_time": 21600,
-    "providers": [
-      {
-        "name": "nvd",
-        "update_from_year": 2010,
-        "update_interval": 3600,
-        "download_timeout": 300
-      }
-    ]
-  }
-}
+<vulnerability-detector>
+    <enabled>yes</enabled>
+    <interval>5m</interval>
+    <ignore_time>6h</ignore_time>
+    <run_on_start>yes</run_on_start>
+
+    <!-- RedHat OS vulnerabilities -->
+    <provider name="redhat">
+      <enabled>yes</enabled>
+      <os>5</os>
+      <os>6</os>
+      <os>7</os>
+      <os>8</os>
+      <update_interval>1h</update_interval>
+    </provider>
+
+    <!-- Aggregate vulnerabilities -->
+    <provider name="nvd">
+      <enabled>yes</enabled>
+      <update_from_year>2010</update_from_year>
+      <update_interval>1h</update_interval>
+    </provider>
+</vulnerability-detector>
 ```
 
 ## 自动响应
