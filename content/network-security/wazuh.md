@@ -140,6 +140,8 @@ Security configuration assessment，SCA
   </sca>
 ```
 
+检测规则 `/var/ossec/ruleset/sca/cis_centos7_linux.yml`
+
 ## 资产清单
 
 System inventory
@@ -214,6 +216,12 @@ VirusTotal，是一个提供免费的可疑文件分析服务的网站， 只能
 ```
 
 ## 漏洞检测
+
+名称解释： 
+
+CVE （Common Vulnerabilities & Exposures） 漏洞信息库
+
+NVD  (National Vulnerability Database) 美国国家漏洞库
 
 vulnerability detector
 
