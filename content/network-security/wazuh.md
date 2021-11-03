@@ -217,14 +217,34 @@ VirusTotal，是一个提供免费的可疑文件分析服务的网站， 只能
 
 vulnerability detector
 
-默认不开启
+`WARNING: vulnerability-detector configuration is only set in the manager`
+
+在管理端配置
 
 ```
-<vulnerability-detector>
+ <vulnerability-detector>
     <enabled>yes</enabled>
     <interval>5m</interval>
     <ignore_time>6h</ignore_time>
     <run_on_start>yes</run_on_start>
+
+    <!-- Ubuntu OS vulnerabilities -->
+    <provider name="canonical">
+      <enabled>no</enabled>
+      <os>trusty</os>
+      <os>xenial</os>
+      <os>bionic</os>
+      <os>focal</os>
+      <update_interval>1h</update_interval>
+    </provider>
+
+    <!-- Debian OS vulnerabilities -->
+    <provider name="debian">
+      <enabled>no</enabled>
+      <os>stretch</os>
+      <os>buster</os>
+      <update_interval>1h</update_interval>
+    </provider>
 
     <!-- RedHat OS vulnerabilities -->
     <provider name="redhat">
@@ -236,13 +256,37 @@ vulnerability detector
       <update_interval>1h</update_interval>
     </provider>
 
+    <!-- Windows OS vulnerabilities -->
+    <provider name="msu">
+      <enabled>yes</enabled>
+      <update_interval>1h</update_interval>
+    </provider>
+
     <!-- Aggregate vulnerabilities -->
     <provider name="nvd">
       <enabled>yes</enabled>
       <update_from_year>2010</update_from_year>
       <update_interval>1h</update_interval>
     </provider>
-</vulnerability-detector>
+
+  </vulnerability-detector>
+
+```
+
+基本流程： 
+
+1. agent 扫描并上报本地信息到 manager 
+
+2. manager 将上报的每个agent信息分别存储到各自sqlite , 存储目录`/var/ossec/queue/db/`
+
+3. manager 从网络上下载更新最新的病毒库。然后利用病毒库进行检测。
+
+注意： 由于病毒库需要从网络下载，在网络环境不能保证时采用离线模式。手动定期更新病毒库。 [参见](https://documentation.wazuh.com/current/user-manual/capabilities/vulnerability-detection/offline_update.html)
+
+配置后需求重启服务
+
+```
+/var/ossec/bin/wazuh-control restart 
 ```
 
 ## 自动响应
