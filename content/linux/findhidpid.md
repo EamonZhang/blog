@@ -11,7 +11,7 @@ tags: []
 
 在top ps 等命令被改写时，利用Linux一切皆文件。找出被隐藏的进程。
 
-一下为python脚本
+以下为python脚本
 
 ```
 #!/usr/bin/env python
