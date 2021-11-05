@@ -82,6 +82,7 @@ END$$;
 
 postgres 暂不支持 delete limit 用法 。根据条件删除大量数据时。
 
+使用with模拟必须有PK或者非空UK
 
 ```
 with t1 as (select id from t where create_time < '2020-01-01 00:00:00' limit 10) 
