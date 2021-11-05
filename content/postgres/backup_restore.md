@@ -77,3 +77,15 @@ END$$;
 ```
 ---
 
+
+## 删除数据 DELETE|UPDATE LIMIT
+
+postgres 暂不支持 delete limit 用法 。根据条件删除大量数据时。
+
+
+```
+with t1 as (select id from t where create_time < '2020-01-01 00:00:00' limit 10) 
+                  delete from t where id in (select * from t1);
+```
+
+
