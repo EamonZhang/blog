@@ -129,7 +129,7 @@ toc: true
 
 ## 日志系统
  
-- ELK
+- [ELK](/postgres/pg_elk)
 
 ## 分布式
 
