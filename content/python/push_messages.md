@@ -112,4 +112,91 @@ async def receive_json(self, message, **kwargs):
    })
 ```
 
+## 客户端代码
 
+#### 服务端准备
+
+由于官方示例服务`ws://echo.websocket.org/` 不再维护。 以下利用channel 简单实现。
+
+consumers.py
+```
+from asgiref.sync import async_to_sync
+from channels.generic.websocket import WebsocketConsumer
+
+class EchoConsumer(WebsocketConsumer):
+
+   def connect(self):
+        self.accept()
+        print("已经建立连接")
+
+   def disconnect(self, code):
+        self.close()
+
+   def receive(self, text_data=None, bytes_data=None):
+        self.send(text_data=text_data)
+```
+
+routing.py
+```
+websocket_urlpatterns = [
+    re_path(r'ws/echo/$', consumers.EchoConsumer.as_asgi()),
+]
+```
+
+#### 长连接调用
+```
+pip3 install websocket-client
+```
+
+```
+import websocket
+import _thread
+import time
+
+def on_message(ws, message):
+    print("receive :"+message)
+
+def on_error(ws, error):
+    print(error)
+
+def on_close(ws, close_status_code, close_msg):
+    print("### closed ###")
+
+def on_open(ws):
+    print("### open ###")
+    def run(*args):
+        for i in range(30):
+            time.sleep(1)
+            ws.send("Hello %d" % i)
+            print("send : %d " % (i))
+        time.sleep(1)
+        print("thread terminating...")
+        ws.close()
+    _thread.start_new_thread(run, ())
+
+if __name__ == "__main__":
+    # websocket.enableTrace(True)
+    ws = websocket.WebSocketApp("ws://127.0.0.1:8000/ws/echo/",
+                              on_open=on_open,
+                              on_message=on_message,
+                              on_error=on_error,
+                              on_close=on_close)
+    ## 心跳保持连接
+    ws.run_forever(ping_interval=60,ping_timeout=50)
+```
+
+#### 短连接调用
+
+```
+from websocket import create_connection
+ws = create_connection("ws://127.0.0.1:8000/ws/echo/")
+print("Sending 'Hello, World'...")
+ws.send("Hello, World")
+print("Sent")
+print("Receiving...")
+result =  ws.recv()
+print("Received '%s'" % result)
+ws.close()
+```
+
+官网 https://pypi.org/project/websocket-client/
