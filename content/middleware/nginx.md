@@ -2,7 +2,9 @@
 title: "nginx"
 date: 2019-04-09T15:42:15+08:00
 draft: false
-categories: ["中间件"]
+toc: false
+categories: ["nginx"]
+tags: []
 ---
 
 [性能优化](https://mp.weixin.qq.com/s/YoZDzY4Tmj8HpQkSgnZLvA)
@@ -58,5 +60,4 @@ admin:$apr1$Jc.x0rme$BWrmulBqUj.g6BeeoEM79/
 [backend 后端服务健康检测](https://www.cnblogs.com/zhangeamon/p/9341788.html)
 
 
-
-
+[日志分析goaccess](https://cloud.tencent.com/developer/article/1449085)
