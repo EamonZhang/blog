@@ -19,8 +19,9 @@ proxy_busy_buffers_size 64k;
 ```
 [官网说明](http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffer_size)
 
+[基本配置](https://www.cnblogs.com/dongye95/p/11096785.html)
 
-#### 利用nginx设置用户登陆认证
+## 利用nginx设置用户登陆认证
 
 如下举例设置用户访问kibana时登陆认证
 ```
