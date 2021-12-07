@@ -1,11 +1,28 @@
 ---
-title: "hdparm 查看硬盘型号"
+title: "查看硬盘型号"
 date: 2018-12-19T08:53:10+08:00
 draft: false
 ---
 
-#### 安装工具
+## 通过总线查看硬盘连接
+cat /proc/scsi/scsi
+```
+Attached devices:
+Host: scsi0 Channel: 00 Id: 00 Lun: 00
+  Vendor: ATA      Model: INTEL SSDSC2KB24 Rev: 0110
+  Type:   Direct-Access                    ANSI  SCSI revision: 05
+Host: scsi1 Channel: 00 Id: 00 Lun: 00
+  Vendor: ATA      Model: INTEL SSDSC2KB96 Rev: 0110
+  Type:   Direct-Access                    ANSI  SCSI revision: 05
+Host: scsi2 Channel: 00 Id: 00 Lun: 00
+  Vendor: ATA      Model: INTEL SSDSC2KB96 Rev: 0110
+  Type:   Direct-Access                    ANSI  SCSI revision: 05
+```
 
+
+## 通过系统查看
+
+#### 安装
 ```
 yum install hdparm
 ```
