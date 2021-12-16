@@ -40,7 +40,7 @@ toc: true
 
 - [安装 Postgres](/postgres/install01)
 - [主从流复制](/postgres/replication01)
-- [Logical Replication 逻辑复制](/logical-replication)
+- [逻辑复制](/postgres/logical-replication)
 - [数据库参数](/postgres/params)
 - [指标查看&stat统计信息](/postgres/stat)
 - [拓展插件](/postgres/extention)

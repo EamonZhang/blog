@@ -26,7 +26,7 @@ draft: false
 ```
 说明： copy 与 \copy 区别， \copy cvs数据在client端、copy svs数据在server端。
 
-注意事项: 需要在新数据库中对序列进行更新
+##### 注意事项: 需要在新数据库中对序列进行更新
 
 ```
 psql -U postgres -d databasename -p 5432 -h 127.0.0.1 -c "select setval('xxxx_id_seq', max(id)) from xxx_table";
@@ -47,7 +47,7 @@ copy from 数据量大时效率太低替代方法
  
 copy将构造出的元组插入共享内存，同时写日志，pg_bulkload绕过了共享内存，不写日志，这样会减少磁盘I/O，但是也很危险。
 
-###### 使用pg_bulkload方式导入数据时一定要注意，注意，注意！！！　由于不写wal日志从库无法同步，从库直接宕掉，直接宕掉！！！ 测试用就好,生产环境需谨慎
+##### 使用pg_bulkload方式导入数据时一定要注意，注意，注意！！！　由于不写wal日志从库无法同步，从库直接宕掉，直接宕掉！！！ 测试用就好,生产环境需谨慎
 
 ## 实时备份恢复
 
@@ -79,6 +79,8 @@ END$$;
 
 
 ## 删除数据 DELETE|UPDATE LIMIT
+
+对数据进行归档完毕后，对数据进行清理。
 
 postgres 暂不支持 delete limit 用法 。根据条件删除大量数据时。
 
