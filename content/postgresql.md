@@ -35,6 +35,7 @@ toc: true
 - [auto vacuum 触发机制](/postgres/auto_vacuum_trigger)
 - [unlogged table](/postgres/unlogged_table)
 - [物化视图](/postgres/materialized)
+- [数据类型 json](/postgres/pg_json)
 
 ## 安装维护
 
