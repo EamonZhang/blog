@@ -46,17 +46,61 @@ tls-sni-01：在域名对应的 Web 服务器下放置一个 HTTPS well-known UR
 
 而申请通配符证书，只能使用 dns-01 的方式。
 
-2.实践
+## 2.实践
+
+#### 安装
+
+```
+curl  https://get.acme.sh | sh -s email=my@example.com
+```
+
+```
+cd ~/.acme.sh/
+alias acme.sh=~/.acme.sh/acme.sh
+```
+
+#### 手动方式认证
+
+将生产的txt记录填入dns解析中
+```
+acme.sh  --issue  --dns   -d mydomain.com --yes-I-know-dns-manual-mode-enough-go-ahead-please
+```
+
+#### 生成证书
+
+```
+acme.sh  --renew   -d mydomain.com  --yes-I-know-dns-manual-mode-enough-go-ahead-please
+```
+
+#### 安装证书
+
+是 service nginx force-reload, 不是 service nginx reload, 据测试, reload 并不会重新加载证书, 所以用的 force-reload)
+
+Nginx 的配置 ssl_certificate 使用 /etc/nginx/ssl/fullchain.cer ，而非 /etc/nginx/ssl/<domain>.cer ，否则 SSL Labs 的测试会报 Chain issues Incomplete 错误。
+
+#### 更新 acme.sh
+
+目前由于 acme 协议和 letsencrypt CA 都在频繁的更新, 因此 acme.sh 也经常更新以保持同步.
+```
+acme.sh --upgrade
+```
+
+[更多参考](https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E)
+
+## 以下方式过期
 
 2.1 基本环境准备  
  
+```
 yum -y install yum-utils  
 yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional  
 sudo yum install python2-certbot-nginx  
+```
 
 2.2 申请证书
 
-certbot  --server https://acme-v02.api.letsencrypt.org/directory -d "*.zhangeamon.top" --manual --preferred-challenges dns-01 certonly
+`certbot  --server https://acme-v02.api.letsencrypt.org/directory -d "*.zhangeamon.top" --manual --preferred-challenges dns-01 certonly`
+
 ```
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator manual, Installer None
@@ -105,7 +149,9 @@ IMPORTANT NOTES:
 2.3 注意事项  
 
 在执行上面的命令时，需要使用txt类型的DNS记录。　在DNS上新建一条Txt 记录,并验证。
-dig  -t txt  _acme-challenge.zhangeamon.top @8.8.8.8 
+
+`dig  -t txt  _acme-challenge.zhangeamon.top @8.8.8.8` 
+
 ```
 ; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7_5.1 <<>> -t txt _acme-challenge.zhangeamon.top @8.8.8.8
 ;; global options: +cmd
@@ -134,7 +180,8 @@ txt　记录生效后继续上面的执行，生成证书
 
 3.查看
 
-certbot certificates -d "*.zhangeamon.top"
+`certbot certificates -d "*.zhangeamon.top"`
+
 ```
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 
