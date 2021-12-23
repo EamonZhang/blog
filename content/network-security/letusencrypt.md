@@ -78,6 +78,15 @@ acme.sh  --renew   -d mydomain.com  --yes-I-know-dns-manual-mode-enough-go-ahead
 
 Nginx 的配置 ssl_certificate 使用 /etc/nginx/ssl/fullchain.cer ，而非 /etc/nginx/ssl/<domain>.cer ，否则 SSL Labs 的测试会报 Chain issues Incomplete 错误。
 
+```
+acme.sh --install-cert -d example.com --key-file   /path/to/keyfile/in/nginx/key.pem  --fullchain-file /path/to/fullchain/nginx/cert.pem 
+```
+
+nginx 证书生效
+```
+ "service nginx force-reload"
+```
+
 #### 更新 acme.sh
 
 目前由于 acme 协议和 letsencrypt CA 都在频繁的更新, 因此 acme.sh 也经常更新以保持同步.
