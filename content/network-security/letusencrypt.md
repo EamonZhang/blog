@@ -96,6 +96,10 @@ acme.sh --upgrade
 
 [更多参考](https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E)
 
+#### 注意事项
+
+证书的有效期为三个月。 `在续签的时候将原来的域名目录删除。` 
+
 ## 以下方式过期
 
 2.1 基本环境准备  
