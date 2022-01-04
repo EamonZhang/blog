@@ -8,8 +8,10 @@ tags: []
 ---
 
 ## 生成大量文件
+```
 mkdir lostfiles
 cd lostfiles
+```
 
 cat create_files.sh
 ```
