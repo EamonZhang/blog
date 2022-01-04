@@ -64,3 +64,15 @@ user	0m2.955s
 sys	0m50.202s
 ```
 
+## 应用
+
+- 快速清除minio bucket 数据 
+
+```
+清除bucket数据
+time find ./bucket001/ -type f  -delete
+
+清除bucket元数据
+.minio.sys/buckets/bucket001
+```
+
