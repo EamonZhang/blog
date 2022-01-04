@@ -73,6 +73,6 @@ sys	0m50.202s
 time find ./bucket001/ -type f  -delete
 
 清除bucket元数据
-.minio.sys/buckets/bucket001
+time find .minio.sys/buckets/bucket001 -type f  -delete
 ```
 
