@@ -2,7 +2,7 @@
 title: "nginx"
 date: 2019-04-09T15:42:15+08:00
 draft: false
-toc: true 
+toc: false
 categories: ["nginx"]
 tags: []
 ---
@@ -13,7 +13,7 @@ tags: []
 
 ```
 worker_processes 4; # 比如物理CPU的数量为4
-worker_cpu_affinity 0001 0010 0100 1000;
+worker_cpu_affinity 0001 0010 0100 1000
 ```
 
 - Nginx最大打开文件数
@@ -100,61 +100,7 @@ http {
 }
 ```
 
-- 防盗链
-
-防止别人直接从你网站引用图片等链接，消耗了你的资源和网络流量
-```
-location ~*^.+\.(jpg|gif|png|swf|flv|wma|wmv|asf|mp3|mmf|zip|rar)$ {
-valid_referers none blocked zhangeamon.top doc.zhangeamon.top localhost;
-if($invalid_referer) {
-  return 404;
-  break;
-}
-access_log off;
-}
-```
-
-- 内核参数优化
-
-```
-fs.file-max = 999999
-net.ipv4.ip_forward = 0
-net.ipv4.conf.default.rp_filter = 1
-net.ipv4.conf.default.accept_source_route = 0
-kernel.sysrq = 0
-kernel.core_uses_pid = 1
-net.ipv4.tcp_syncookies = 1
-kernel.msgmnb = 65536
-kernel.msgmax = 65536
-kernel.shmmax = 68719476736
-kernel.shmall = 4294967296
-net.ipv4.tcp_max_tw_buckets = 6000
-net.ipv4.tcp_sack = 1
-net.ipv4.tcp_window_scaling = 1
-net.ipv4.tcp_rmem = 10240 87380 12582912
-net.ipv4.tcp_wmem = 10240 87380 12582912
-net.core.wmem_default = 8388608
-net.core.rmem_default = 8388608
-net.core.rmem_max = 16777216
-net.core.wmem_max = 16777216
-net.core.netdev_max_backlog = 262144
-net.core.somaxconn = 40960
-net.ipv4.tcp_max_orphans = 3276800
-net.ipv4.tcp_max_syn_backlog = 262144
-net.ipv4.tcp_timestamps = 0
-net.ipv4.tcp_synack_retries = 1
-net.ipv4.tcp_syn_retries = 1
-net.ipv4.tcp_tw_recycle = 1
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_mem = 94500000 915000000 927000000
-net.ipv4.tcp_fin_timeout = 1
-net.ipv4.tcp_keepalive_time = 30
-net.ipv4.ip_local_port_range = 1024 65000
-```
-
-[//]: #[性能优化](https://mp.weixin.qq.com/s/YoZDzY4Tmj8HpQkSgnZLvA)
-
-## 常见错误
+[性能优化](https://mp.weixin.qq.com/s/YoZDzY4Tmj8HpQkSgnZLvA)
 
 - 错误码 502   ， error.log 中错误信息 [error] 236#236: *8371899 upstream sent too big header while reading response header from upstream,
 
@@ -168,7 +114,7 @@ proxy_busy_buffers_size 64k;
 
 [基本配置](https://www.cnblogs.com/dongye95/p/11096785.html)
 
-## 设置用户登陆认证
+## 利用nginx设置用户登陆认证
 
 如下举例设置用户访问kibana时登陆认证
 ```
