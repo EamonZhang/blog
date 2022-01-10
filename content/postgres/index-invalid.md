@@ -1,9 +1,11 @@
 ---
 title: "引起索引失效"
 date: 2018-12-20T16:34:22+08:00
+categories: ["postgres"]
+toc : true
 draft: false
 ---
-##### 简介
+## 简介
 
 索引的作用，加速检索，排序，分组。
 
@@ -13,7 +15,7 @@ draft: false
 
 维护： 根据统计表发生全表扫描次数，索引使用次数。合理添加删除索引。
 
-##### 索引失效的场景
+## 索引失效的场景
 
 如果where过滤条件设置不合理，即使索引存在，且where过滤条件中包含索引列，也会导致全表扫描，索引不起作用。什么条件下会导致索引失效呢？
 
@@ -33,7 +35,7 @@ draft: false
 
 8.表中数据量太少时
 
-##### 实例
+## 实例
 
 测试表
 ```
@@ -67,7 +69,7 @@ tips
 
 更新频繁的字段不建议建索引，如update_time
 
-##### 1.任何计算、函数、类型转换
+#### 1.任何计算、函数、类型转换
 ```
 #索引检索
 postgres=# explain analyze select * from tbl_index where a = 100;
@@ -131,7 +133,7 @@ create index tbl_index_b2date on tbl_index using btree ((b::date));
 select * from tbl_index where b < '2020-04-16 00:00:00' and b >= '2020-04-15 00:00:00';
 
 ```
-##### 2.!=
+#### 2.!=
 ```
 postgres=# explain analyze select * from tbl_index where a != 100;
                                                         QUERY PLAN                                                        
@@ -145,7 +147,7 @@ postgres=# explain analyze select * from tbl_index where a != 100;
 
 Time: 1792.412 ms (00:01.792)
 ```
-##### 3. NOT
+#### 3. NOT
 
 ```
 postgres=# explain analyze select * from tbl_index where a is null;
@@ -169,11 +171,12 @@ postgres=# explain analyze select * from tbl_index where a is not null;
 
 Time: 1790.625 ms (00:01.791)
 ```
-###### 4.模糊查询通配符在开头
+#### 4.模糊查询通配符在开头
 
 [参见](../postgres/pg_trgm/)
 
-##### 5.索引字段在表中占比较高
+#### 5.索引字段在表中占比较高
+
 ```
 postgres=# create index tbl_index_c on tbl_index using btree (c);
 CREATE INDEX
@@ -222,7 +225,7 @@ postgres=# explain analyze select * from tbl_index where c = 'zhangeamon';
 Time: 98.464 ms
 ```
 
-##### 6.多字段btree索引查询条件不包含第一列
+#### 6.多字段btree索引查询条件不包含第一列
 
 ```
 #创建表
@@ -323,7 +326,7 @@ postgres=# explain analyze select * from tbl_indexes where b = '91975' and c = '
 Time: 130.603 ms
 
 ```
-##### 7.多字段索引查询条件使用OR（有时也会走索引扫描，但查询效率不高）
+#### 7.多字段索引查询条件使用OR（有时也会走索引扫描，但查询效率不高）
 
 ```
 postgres=# explain analyze select * from tbl_indexes where a = 10  or c = '4c79d';
@@ -432,7 +435,7 @@ Time: 1.311 ms
 性能提升明显
 
 
-##### 8.表中数据量少时
+#### 8.表中数据量少时
 
 ```
 postgres=# create table tbl_index_less(a int);
@@ -518,4 +521,38 @@ https://mp.weixin.qq.com/s/xdbo67F72a9eTV93TEuL6w
 [索引利用统计](https://github.com/powa-team/pg_qualstats)
 ```
 A PostgreSQL extension for collecting statistics about predicates, helping find what indices are missing
+```
+
+## 利用索引失效改变执行计划案例
+
+表定义&数据分布
+``` 
+create table tb1(id int primary key,c1 int);
+create index on tb1(c1);
+insert into tb1 select id, id/10000 from generate_series(1,10000000)id;
+```
+SQL&执行计划
+```
+postgres=# explain analyze select * from tb1 where c1=999 order by id limit 10; QUERY PLAN
+-------------------------------------------------------------------------------------------------------------------------------- Limit (cost=0.43..332.29 rows=10 width=8) (actual time=1571.315..1571.319 rows=10 loops=1)
+-> Index Scan using tb1_pkey on tb1 (cost=0.43..328935.03 rows=9912 width=8) (actual time=1571.314..1571.316 rows=10 loops=1)
+Filter: (c1 = 999)
+Rows Removed by Filter: 9989999 Planning Time: 0.112 ms
+Execution Time: 1571.337 ms
+(6 rows)
+```
+上面Index Scan估算的行数和cost都比较准确，但评估LIMIT子句时，优化器假设数据分布是均匀的， 只需扫描主键索引的 10/9912即可找到10条匹配的记录，最终的估算代价也被LIMIT降到10/9921。但实际上满足条件的记录都集中在索引的尾部。
+ 
+#### sql 改写
+
+SQL改写方法1:破坏索引排序
+```
+select * from tb1 where c1=999 order by id+0 limit 10;
+```
+
+SQL改写方法2:物化子查询
+```
+WITH t AS MATERIALIZED(
+select * from tb1 where c1=999 )
+select * from t order by id limit 10
 ```
