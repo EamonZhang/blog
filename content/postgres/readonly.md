@@ -1,6 +1,8 @@
 ---
 title: "创建只读用户"
 date: 2020-09-08T09:28:59+08:00
+categories: ["postgres"]
+toc : true
 draft: false
 ---
 
