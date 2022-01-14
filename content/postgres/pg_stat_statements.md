@@ -132,7 +132,7 @@ pg_stat_statements是累积的统计，如果要查看某个时间段的统计�
 
 ```
 建快照表
-create table stat_pg_stat_statements as select now() ,* from pg_stat_statements where 1=2;
+create table stat_pg_stat_statements as select log_time ,* from pg_stat_statements where 1=2;
 插入数据
 insert into stat_pg_stat_statements select now() ,* from pg_stat_statements;
 ```
