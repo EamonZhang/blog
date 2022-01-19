@@ -159,3 +159,7 @@ Swap:          4095          40        4055
    id: CPU处在空闲状态时间百分比   
 
 ```
+
+内存溢出问题
+
+https://www.oracle.com/technical-resources/articles/it-infrastructure/dev-oom-killer.html
