@@ -210,3 +210,7 @@ rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
 ```
 "x-queue-type", "quorum"
 ```
+
+## 高可用机器搭建
+
+https://blog.csdn.net/qq_28533563/article/details/107932737
