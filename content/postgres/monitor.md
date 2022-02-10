@@ -1,7 +1,9 @@
 ---
-title: "Postgres 监控"
+title: "Postgres 监控常用工具"
 date: 2018-12-06T16:21:08+08:00
 draft: false
+categories: ["postgres"]
+toc : false 
 ---
 
 #### 各种监控方式
@@ -49,6 +51,27 @@ pg_activity
                                                                                RUNNING QUERIES
 PID    DATABASE                      APP             USER           CLIENT   CPU% MEM%   READ/s  WRITE/s     TIME+  W  IOW              state   Query
 33430  None                  walreceiver         postgres     10.1.80.6/32    1.0  0.0    0.00B    0.00B  0.000000  N    N             active
+```
+
+[pg_top]
+```
+pg_top
+last pid: 15974;  load avg:  1.50,  1.79,  1.42;       up 508+22:42:20                                                                                                              10:03:51
+134 processes: 134 sleeping
+CPU states:  2.9% user,  0.0% nice,  0.7% system, 96.4% idle,  0.1% iowait
+Memory: 60G used, 2497M free, 4K buffers, 54G cached
+DB activity: 1272 tps,  0 rollbs/s,   0 buffer r/s, 100 hit%, 146256 row r/s, 2028 row w/s
+DB I/O:     0 reads/s,     1 KB/s,   238 writes/s,  4812 KB/s
+DB disk: 953.2 GB total, 694.9 GB free (27% used)
+Swap: 1853M used, 22G free, 363M cached
+
+  PID USERNAME PRI NICE  SIZE   RES STATE   TIME   WCPU    CPU COMMAND
+15790 postgres  20    0   11G   81M sleep   0:00  0.78%  4.56% postgres: k3s_cg k3s_cg 10.1.40.92(37422) idle
+29050 postgres  20    0   11G  122M sleep  41.6H  0.60%  3.18% postgres: zabbix zabbix ::1(55888) idle
+29020 postgres  20    0   11G  120M sleep  41.7H  0.50%  2.98% postgres: zabbix zabbix ::1(55860) idle
+29061 postgres  20    0   11G  120M sleep  41.7H  0.56%  2.98% postgres: zabbix zabbix ::1(55898) idle
+29059 postgres  20    0   11G  122M sleep  41.6H  0.48%  2.98% postgres: zabbix zabbix ::1(55896) idle
+29069 postgres  20    0   11G  120M sleep  41.6H  0.56%  2.98% postgres: zabbix zabbix ::1(55906) idle
 ```
 
 [monitoring-stats](https://www.postgresql.org/docs/devel/monitoring-stats.html)
