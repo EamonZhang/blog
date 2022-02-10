@@ -40,7 +40,7 @@ pid     cl_addr      cl_port   datname       usename    appname    backend_type 
 27410   10.1.88.22   34058     timescaledb   postgres              client backend                                  active   00:00:00   00:00:00          00:00:00          COMMIT                 
 ```
 
-[pg_activity](https://github.com/dalibo/pg_activity)
+[pg_activity](/postgres/pg_activity)
 ```
 pg_activity
 - postgres@localhost:5432/postgres - Ref.: 2s

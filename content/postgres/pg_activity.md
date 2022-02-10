@@ -3,7 +3,7 @@ title: "数据库实时运行信息查看"
 date: 2022-01-12T15:47:07+08:00
 draft: false
 toc: false
-categories: ["postgresql"]
+categories: ["postgres"]
 tags: []
 ---
 
