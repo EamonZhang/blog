@@ -89,7 +89,7 @@ wait_event, usename, locktype, mode, granted  ORDER BY max_wait_time DESC;
 pg_class.reltuples*autovacuum_vacuum_scale_factor+autovacuum_vacuum_threshold
 ```
 
-## auto analysis 预测
+## auto analyze 预测
 ```
 pg_class.reltuples*autovacuum_vacuum_scale_factor+autovacuum_vacuum_threshold
 ```
