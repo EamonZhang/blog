@@ -32,7 +32,8 @@ toc: true
 - [高级SQL](/postgres/high_level_sql)
 - [数据库 OOM 预防](/postgres/oom)
 - [跨库操作](/postgres/pg_fdw)
-- [auto vacuum 触发机制](/postgres/auto_vacuum_trigger)
+- [autovacuum 触发机制](/postgres/auto_vacuum_trigger)
+- [autovacuum限流](/postgres/vacuum_limit)
 - [unlogged table](/postgres/unlogged_table)
 - [物化视图](/postgres/materialized)
 - [数据类型 json](/postgres/pg_json)
@@ -127,6 +128,7 @@ toc: true
 - [监控工具](/postgres/monitor)
 - [pgwatch2 数据库指标监控查看](/postgres/pgwatch2)
 - [数据库监控指标](/postgres/monitor_explain)
+- [查看数据信息常用sql整理](/postgres/monitor-sql)
 
 ## 日志系统
  
