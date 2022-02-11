@@ -2,16 +2,19 @@
 title: "pg_stat_statements 数据库统计信息"
 date: 2018-11-29T11:08:27+08:00
 draft: false
+toc: false 
+categories: ['postgres']
+tags: []
 ---
-#### pg_stat_statements 扩展
+## pg_stat_statements 扩展
 
-##### 安装　
+#### 安装　
 
 ```
 yum install postgresql10-contrib.x86_64
 
 ```
-##### 修改配置参数
+#### 修改配置参数
 
 ```
 vi $PGDATA/postgresql.conf  
@@ -31,12 +34,12 @@ pg_stat_statements.track_utility = off  #是否跟踪非DML语句 (例如DDL，D
 pg_stat_statements.save = on #重启后是否保留统计信息  
  
 ```
-##### 重启数据库
+#### 重启数据库
 
 ```
 systemctl restart postgresql-10
 ```
-##### 创建扩展
+#### 创建扩展
 
 ```
 create extension pg_stat_statements;
