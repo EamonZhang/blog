@@ -81,11 +81,12 @@ ETCD_LISTEN_CLIENT_URLS="http://10.10.1.10:2379"
 python3 环境
 ```
 yum install gcc python3 python3-devel
+pip3 install --upgrade pip
 ```
 依赖安装
 ```
-pip3 install psycopg2-binary
-pip3 install patroni[etcd]
+pip install psycopg2-binary
+pip install patroni[etcd]
 ```
 服务安装
 ```
@@ -103,8 +104,8 @@ systemctl enable ntpd
 
 vi /etc/patroni.yml
 ```
-scope: postgres          # 集群名称 
-namespace: /db002/       # 名称空间，对应etcd 根目录
+scope: pg_cluster01           # 集群名称 
+namespace: /pgs/       # 名称空间，对应etcd 根目录
 name: postgresql0        # 节点名称
 
 restapi:
@@ -240,7 +241,7 @@ journalctl -u patroni.service -f -n 1000
 
 ```
 #patronictl -c /etc/patroni.yml list
-+ Cluster: postgres (6935229608238737808) ----+----+-----------+
++ Cluster: pg_cluster (6935229608238737808) ----+----+-----------+
 | Member      | Host       | Role   | State   | TL | Lag in MB |
 +-------------+------------+--------+---------+----+-----------+
 | postgresql0 | 10.10.1.11 | Leader | running |  2 |           |
@@ -248,15 +249,15 @@ journalctl -u patroni.service -f -n 1000
 ```
 6 其他节点重复以上操作, 在集群中加入新节点
 
-注意事项 patroni.yml 中的配置不同的节点修改成相应的值
+`注意事项` `patroni.yml 配置文件中的不同的节点需要修改成对应节点相符的值`
 
-name: postgresql0
+`name: postgresql0`
   
-IP写成节点的IP
+`IP写成节点的IP`
 
 ```
 #patronictl -c /etc/patroni.yml list -e
-+ Cluster: postgres (6935302809216505755) -----+----+-----------+-----------------+-------------------+------+
++ Cluster: pg_cluster (6935302809216505755) -----+----+-----------+-----------------+-------------------+------+
 | Member      | Host       | Role    | State   | TL | Lag in MB | Pending restart | Scheduled restart | Tags |
 +-------------+------------+---------+---------+----+-----------+-----------------+-------------------+------+
 | postgresql0 | 10.10.1.11 | Leader  | running | 14 |           |                 |                   |      |
@@ -294,7 +295,7 @@ ttl: 30
 ```
 修改后待生效
 #patronictl -c /etc/patroni.yml list 
-+ Cluster: postgres (6935302809216505755) -----+----+-----------+-----------------+
++ Cluster: pg_cluster (6935302809216505755) -----+----+-----------+-----------------+
 | Member      | Host       | Role    | State   | TL | Lag in MB | Pending restart |
 +-------------+------------+---------+---------+----+-----------+-----------------+
 | postgresql0 | 10.10.1.11 | Leader  | running | 14 |           | *               |
@@ -304,7 +305,7 @@ ttl: 30
 ```
 ```
 重启集群生效, 可指定执行计划。定时自动执行
-#patronictl -c /etc/patroni.yml restart postgres(集群名)
+#patronictl -c /etc/patroni.yml restart pg_cluster(集群名)
 ```
 
 以上修改的文件为 postgres.conf
@@ -321,7 +322,10 @@ vi postgres.base.conf
 systemctl restart patroni 
 systemctl reload patroni 
 ```
-
+或
+```
+#patronictl -c /etc/patroni.yml restart/reload pg_cluster(集群名) postgresql0(节点名) 
+```
 3 REFTFULL API 接口访问
 
 ## 手动swithover
@@ -363,7 +367,7 @@ Are you sure you want to switchover cluster postgres, demoting current master po
 
 维护模式： 集群对外提供服务。但集群关系不在接受patroni管理。此时的集群为原生的流复制。
 
-主动维护模式： 集群正常的情况下开启维护模式, 集群不在拥有autofailover 能力。当DCS 失效集群不受影响.
+主动维护模式： 集群正常的情况下开启维护模式, 集群不在拥有autofailover 能力,仍然具有swithover功能。当DCS 失效集群不受影响.
 ```
 # 进入维护模式
 patronictl -c /etc/patroni.yml pause
@@ -376,10 +380,17 @@ Success: cluster management is resumed
 # 当前状态 是否为维护模式
 1 可查看在DSC 中的config信息
 2 API 接口信息
+
+patronictl -c /etc/patroni/patroni.yaml show-config | grep pause
+pause: true
 ```
 被动维护模式： 当DCS 失效时集群变为只读模式
 
-处理方法 TODO 
+处理方法 TODO, 增加patroni与DCS之间的超时时间。在收到DCS异常警告后给自己充分的时间来处理。 
+
+```
+retry_timeout: 86400 (一天)
+```
 
 ## 弹性扩容缩容
 
@@ -399,7 +410,7 @@ Success: cluster management is resumed
 
 服务发现参考下面的 restfullapi
 
-## restFULLAPI
+## RestFullAPI
 
 ```
 -- 读取配置文件

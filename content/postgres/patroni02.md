@@ -49,7 +49,7 @@ patronictl edit-config -s 'synchronous_mode_strict:true'
 synchronous_mode = true , 
 
 为同步模式，只有一个从节点为sync。在failover时sync节点才有资格选为新主。
-与原来的pg同步不同，原pg服务当所有的从节点不可用是写操作会被堵塞。
+与原来的pg同步不同，原pg服务当所有的从节点不可用时写操作将会被堵塞。
 由patroni 管理的pg 设置为synchronous_mode = true ，当同步从库不可用时主库发生降级。不会影响业务写操作。
 
 synchronous_mode_strict:true
@@ -74,7 +74,7 @@ patronictl -c /etc/patroni.yml list
 
 ## 异地多机房策略
 
-A. 当异地节点为一个节点。
+A. 当异地节点只有一个节点时。
 
 - 备用机房节点在failover时不能选做主
 - 备用机房节点主从复制采用异步方式
