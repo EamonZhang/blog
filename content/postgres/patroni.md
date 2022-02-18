@@ -55,32 +55,35 @@ repmgrd 自动流复制管理 守护进程
 
 
 ## patroni搭建新集群
-1 [虚拟机环境](/kvm/vagrant.html)
+#### [创建虚拟机环境](/kvm/vagrant.html)
 
-```
-10.10.1.10 node0 外部节点etcd
-10.10.1.11 - 13 node1-node3 集群节点
-```
+|节点|IP| 应用|
+| -- | -- | -- |
+| node0 | 10.10.1.10 | etcd,ntp |
+| node1 | 10.10.1.11 | patroni,pg,ntp|
+| node2 | 10.10.1.12 | patroni,pg,ntp|
+| node3 | 10.10.1.13 | patroni,pg,ntp|
 
-2 node0 安装etcd
+####  安装etcd
 
 单节点etcd 安装
 ```
 yum install etcd 
 ```
 配置其他节点可访问
-etc/etcd/etcd.conf
+/etcd/etcd.conf
 ```
 ETCD_LISTEN_CLIENT_URLS="http://10.10.1.10:2379"
+ETCD_ADVERTISE_CLIENT_URLS="http://10.10.1.10:2379"
 ```
 
 [etcd 集群管理](./)
 
-3 node1-node3 安装配置patroni
+####  安装配置patroni
 
 python3 环境
 ```
-yum install gcc python3 python3-devel
+yum install gcc python3 python3-devel -y
 pip3 install --upgrade pip
 ```
 依赖安装
@@ -88,19 +91,19 @@ pip3 install --upgrade pip
 pip install psycopg2-binary
 pip install patroni[etcd]
 ```
-服务安装
+ntp 安装
 ```
-yum install ntp
+yum install ntp -y
 systemctl start ntpd
 systemctl enable ntpd
 ```
-数据库安装
+#### 数据库安装
 
 [参考](/postgres/install01/)
 
 不需要初始化
 
-4 基础配置
+#### 基础配置
 
 vi /etc/patroni.yml
 ```
@@ -177,9 +180,8 @@ tags:
 
 ```
 
-5 启动服务
+#### 服务管理
 
-服务管理
 cat /usr/lib/systemd/system/patroni.service 
 ```
 [Unit]
@@ -247,13 +249,13 @@ journalctl -u patroni.service -f -n 1000
 | postgresql0 | 10.10.1.11 | Leader | running |  2 |           |
 +-------------+------------+--------+---------+----+-----------+
 ```
-6 其他节点重复以上操作, 在集群中加入新节点
+#### 其他节点重复以上操作, 在集群中加入新节点
 
 `注意事项` `patroni.yml 配置文件中的不同的节点需要修改成对应节点相符的值`
 
 `name: postgresql0`
   
-`IP写成节点的IP`
+`IP写成节点对应的IP`
 
 ```
 #patronictl -c /etc/patroni.yml list -e
@@ -268,7 +270,7 @@ journalctl -u patroni.service -f -n 1000
 
 ## patroni管理pg配置
 
-1 多节点统一配置
+#### 多节点统一配置
 
 以下修改后集群中每个节点都生效，并且保持一致。
 ```
@@ -310,7 +312,7 @@ ttl: 30
 
 以上修改的文件为 postgres.conf
 
-2 单节点数据库配置
+#### 单节点数据库配置
 
 有些参数只想在特定节点生效，配置方式与单节点数据库一致
 
@@ -326,7 +328,7 @@ systemctl reload patroni
 ```
 #patronictl -c /etc/patroni.yml restart/reload pg_cluster(集群名) postgresql0(节点名) 
 ```
-3 REFTFULL API 接口访问
+#### 利用RESTFULL API 进行配置管理
 
 ## 手动swithover
 
@@ -357,6 +359,10 @@ Are you sure you want to switchover cluster postgres, demoting current master po
 ```
 ## 自动failover
 
+当集群环境发生异常状况时，集群自动所采取的对应措施。
+
+更多异常状况CASE可参考，[高可用集群设计](../ha_fd)
+
 - 节点断网，通信失败，服务不停
 - 节点断电，通信失败，停服
 - 通信成功，服务停
@@ -386,7 +392,7 @@ pause: true
 ```
 被动维护模式： 当DCS 失效时集群变为只读模式
 
-处理方法 TODO, 增加patroni与DCS之间的超时时间。在收到DCS异常警告后给自己充分的时间来处理。 
+处理方法, 增加patroni与DCS之间的超时时间。在收到DCS异常警告后给自己充分的时间来处理。 
 
 ```
 retry_timeout: 86400 (一天)

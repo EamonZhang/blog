@@ -2,11 +2,14 @@
 title: "数据库 OOM 预防"
 date: 2020-06-30T09:26:42+08:00
 draft: false
+toc: false
+categories: ["postgres"]
+tags: []
 ---
 
-#### 降低主进程被OOM kill 掉的风险
+## 降低主进程被OOM kill 掉的风险
 
-###### 1. restart_after_crash
+####  restart_after_crash
 
 默认崩溃重启
 ```
@@ -18,7 +21,7 @@ postgres=# show restart_after_crash;
 
 ```
 
-###### 2. vm.overcommit 
+####  vm.overcommit 
 ```
 # vi /etc/sysctl.conf
 
@@ -32,7 +35,7 @@ vm.swappiness = 1 # 交换分区
 # sysctl -p
 ```
 
-###### 3. oom_score_adj
+####  oom_score_adj
 
 oom_score_adj 的取值范围为 -1000 到 1000，值越大，被os干掉的风险越大。
 
@@ -50,7 +53,7 @@ Environment=PG_OOM_ADJUST_VALUE=0
 ```
 Pid=`head -n 1 /PATH/TO/postmaster.pid` && echo -1000 > /proc/$Pid/oom_score_adj
 ```
-###### 4. NUMA 
+####  NUMA 
 
 ```
 
