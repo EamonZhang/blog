@@ -213,6 +213,23 @@ pg 流复制新加入节点限流
 ```
 pg_basebackup -r
 ```
+选择从哪个节点拉取完整备份
+```
+tags.clonefrom
+```
+
+## 避免重新拉取
+
+```
+pg_rewind
+```
+
+## 级联复制
+
+```
+tags.replicatefrom: name  
+```
+测试结果写IP不生效，写name可以
 
 
 https://zhuanlan.zhihu.com/p/260958352

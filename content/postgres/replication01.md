@@ -264,8 +264,10 @@ primary_conninfo = 'application_name=standby02 user=postgres host=10.2.0.14 port
 主库查看结果
 ```
 psql -U postgres
-postgres=# select sync_state from pg_stat_replication ;
+postgres=# select sync_priority,sync_state from pg_stat_replication ;
 ```
+
+sync_priority,sync_priority 状态说明
 
 ## 从变主
 
