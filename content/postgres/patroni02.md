@@ -200,11 +200,8 @@ retry_timeout: timeout for DCS and PostgreSQL operation retries (in seconds). DC
 
 思路 pg 脱离patroi 的管理，采用自身流复制
 
-```
 
 具体方法 
-
-```
 
 ## 加入节点复制数据限流
 
