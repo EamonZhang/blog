@@ -236,3 +236,14 @@ set_auto(relation REGCLASS, value BOOLEAN)
 性能上反而可能会变得更差，查询条件一定要带上分区健，否则会扫描所有子表。
 
 当单个索引的大小超过物理内存的一半时考虑分表
+
+## 遇见过的错误 
+
+```
+ERROR:  unrecognized node type: 369
+背景:  SQL statement "select public.create_single_range_partition
+```
+
+解决： https://github.com/postgrespro/pg_pathman/issues/224
+
+将 1.5.11 升级至 1.5.12 
