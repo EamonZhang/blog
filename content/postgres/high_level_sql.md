@@ -136,3 +136,7 @@ select * from T_a where B = 1;
 
 执行计划走A 索引 
 ```
+
+更多参考
+
+https://www.jianshu.com/p/50292ad0d7eb
