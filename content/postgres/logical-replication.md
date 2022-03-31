@@ -156,3 +156,5 @@ create subscription sub1 connection 'host=10.1.7.55 port=25432 dbname=pglogicalt
 
 多主方案， DBR
 
+例子
+https://cdn.modb.pro/db/48200

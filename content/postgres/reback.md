@@ -223,5 +223,8 @@ postgres=# select xmin,xmax,* from reback_t ;
  26913049 | 26913056 | 21
 (9 行记录)
 ```
+####
+
+插件 pg_dirtyread
 
 封侯非我意，我愿海波平。
