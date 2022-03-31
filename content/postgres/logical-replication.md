@@ -158,3 +158,7 @@ create subscription sub1 connection 'host=10.1.7.55 port=25432 dbname=pglogicalt
 
 例子
 https://cdn.modb.pro/db/48200
+
+
+对DDL支持
+https://github.com/enova/pgl_ddl_deploy
