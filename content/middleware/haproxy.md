@@ -2,12 +2,12 @@
 title: "Haproxy 算法"
 date: 2018-11-26T08:53:09+08:00
 draft: false
-categories: ["中间件"]
+categories: ["haproxy"]
 ---
 
 1. blance roundrobin # 轮询，软负载均衡基本都具备这种算法 
 
-2. balance static-rr # 根据权重，建议使用 
+2. balance static-rr # 根据权重，不支持慢启动 。建议使用 
 
 3. balance leastconn # 最少连接者先处理，建议使用 
 
