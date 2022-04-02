@@ -195,7 +195,7 @@ vboxmanage list vms
 vboxmanage showvminfo 5bb1e4a9-8a38-4ef8-a763-cd14cebf7463
 ```
 
-#### 虚拟机大包成镜像
+#### 虚拟机打包成镜像
 ```
 vagrant package --base kvm_node3_1644908463101_26319 --output basekvm.box
 ````
