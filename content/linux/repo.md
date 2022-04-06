@@ -71,12 +71,15 @@ EOF
 ```
 #### 客户端
 
+```
 cat << EOF > /etc/yum.repos.d/private.repo
 
-[name]
-name=zhaobsh
+[base]
+name=private
 baseurl=http://mirrors.zhangeamon.top/base/Packages/
 enabled=1
 gpgcheck=0 
 
 EOF
+
+```
