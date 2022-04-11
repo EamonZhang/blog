@@ -1,5 +1,5 @@
 ---
-title: "Consul DNS 服务发现"
+title: "Consul DNS 服务"
 date: 2020-06-29T11:09:52+08:00
 draft: false
 categories: ["中间件"]
@@ -86,7 +86,7 @@ python -m SimpleHTTPServer 8000
 ```
 服务开启时解析到 10.1.88.85 服务关闭时 10.1.88.85 被剔除。
 
-###### dnsmasq  配置
+#### dnsmasq  配置
 
 vi /etc/dnsmasq.conf
 ```
@@ -111,3 +111,26 @@ log-queries
 #cname=a.a.com,a.b.com
 ```
 
+#### 负载均衡
+
+负载均衡指的是多个dns服务同时对外提供服务。 
+
+配置nginx转发dns
+```
+upstream dns_servers {
+  server <UPSTREAM>  weight=2 max_fails=1  fail_timeout=5s;
+  server <UPSTREAM>  weight=2 max_fails=1  fail_timeout=5s;
+}
+
+server {
+  listen 53  udp;
+  listen 53; #tcp
+  proxy_pass dns_servers;
+
+  proxy_timeout 3s;
+  proxy_responses 1;
+
+  error_log <LOG_PATH> error;
+}
+
+```
