@@ -209,3 +209,5 @@ admin:$apr1$Jc.x0rme$BWrmulBqUj.g6BeeoEM79/
 
 
 [日志分析goaccess](https://cloud.tencent.com/developer/article/1449085)
+
+nginx + consul + upsync 实现动态负载均衡 
