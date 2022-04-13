@@ -57,6 +57,10 @@ https://github.com/wal-e/wal-e
 
 https://github.com/wal-g/wal-g
 
+## 定期备份
+
+https://github.com/postgrespro/pg_probackup
+
 ## 备份恢复管理
 
 https://github.com/pgbackrest/pgbackrest
