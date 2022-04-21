@@ -44,6 +44,8 @@ pg_rewind登场 告别一下回到解放前。
 - 必须开启full_page_writes 默认开启
 - 必须开启wal_log_hints 修改后需要重启 或者data block checksum 数据库初始化时设置
 
+如果在初始化的时候没有开启checksum ,在version 12 及以后的版本中可以使用 [pg_checksum](https://www.modb.pro/db/103607) 重新设置  
+
 1 将10.1.88.72从库变成主库
 
 ```

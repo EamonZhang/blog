@@ -35,8 +35,8 @@ yum install -y postgresql10-server postgresql10  postgresql10-contrib
 3.初始化
 
 ```
-默认
-/usr/pgsql-10/bin/postgresql-10-setup initdb
+建议开启 checksums
+/usr/pgsql-10/bin/postgresql-10-setup initdb ‑‑data‑checksums
 
 自定义
 /usr/pgsql-10/bin/initdb -D $PGDATA -U postgres -E UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8 -k
