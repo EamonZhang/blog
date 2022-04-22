@@ -100,6 +100,12 @@ systemctl restart postgresql-10.service
 
 ```
 
+7. 建议默认开启extension
+
+- pg_repack
+- pg_stat_statements
+- auto_explain
+
 #### 进一步优化
 
 ##### 系统Linux 内核参数
