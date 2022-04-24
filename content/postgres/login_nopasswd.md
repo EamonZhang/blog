@@ -56,7 +56,7 @@ Type "help" for help.
 ```
 定义pg_service.conf文件，该文件可以包含多个模块，每个模块代表一个连接。
 
-方法四：设置.pgpass文件
+#### 方法四：设置.pgpass文件
 
 改文件默认在/home/postgres/，且该文件的权限要为600，如果文件权限不对，则在登录会有相应的告警输出，并要求输入用户密码。
 ```
@@ -87,7 +87,7 @@ psql (13.2)
 Type "help" for help.
 ```
 
-方法五： 设置pg_hab.conf 为 ident 或 peer
+#### 方法五： 设置pg_hab.conf 为 ident 或 peer
 
 peer 方式一 
 ```
