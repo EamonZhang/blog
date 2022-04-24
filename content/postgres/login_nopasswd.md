@@ -87,3 +87,41 @@ psql (13.2)
 Type "help" for help.
 ```
 
+方法五： 设置pg_hab.conf 为 ident 或 peer
+
+peer 方式一 
+```
+local   all    all       peer
+```
+
+peer 方式二
+```
+local   all    all       ident map=t
+```
+
+再配置pg_ident.conf
+```
+#mapping name      os user name      db user name
+t                  os_user           postgres
+```
+
+ident 方式
+```
+host   all    all       ident map=t
+```
+
+再配置pg_ident.conf
+```
+#mapping name      os user name      db user name
+t                  os_user           postgres
+```
+
+peer 和 ident 区别
+
+
+- 都是基于操作系统用户认证，通过操作系统用户映射数据库用户进行认证，peer方式数据库访问客户端与数据库服务器必须在同一台操作系统上，ident方式则不是。
+  peer使用unix socket会话，psql访问时不指定-h 或者-h localhost 或者-h $PGDATA
+
+- ident使用tcp会话，psql访问时-h 127.0.0.1 或host
+
+
