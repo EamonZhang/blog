@@ -225,3 +225,23 @@ vagrant snapshot delete node0 v.1.1
 恢复快照
 vagrant snapshot restore node0 v.1.1
 ```
+
+## 遇见错误
+
+
+#### ubuntu 20.04 指定 private_network 时
+```
+here was an error while executing `VBoxManage`, a CLI used by Vagrant
+for controlling VirtualBox. The command and stderr is shown below.
+
+Command: ["hostonlyif", "ipconfig", "vboxnet4", "--ip", "10.0.2.1", "--netmask", "255.255.255.0"]
+
+Stderr: VBoxManage: error: Code E_ACCESSDENIED (0x80070005) - Access denied (extended info not available)
+VBoxManage: error: Context: "EnableStaticIPConfig(Bstr(pszIp).raw(), Bstr(pszNetmask).raw())" at line 242 of file VBoxManageHostonly.cpp
+
+```
+
+解决  sudo vim /etc/vbox/networks.conf
+```
+* 0.0.0.0/0
+```
