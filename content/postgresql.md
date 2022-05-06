@@ -56,6 +56,7 @@ toc: true
 
 ## 管理
 
+- [psql tips](https://psql-tips.org/psql_tips_all.html)
 - [pg_pathman 分区表](/postgres/pg_pathman)
 - [范式约束](/postgres/normal-form)
 - [DBA 日常](/postgres/dba)
