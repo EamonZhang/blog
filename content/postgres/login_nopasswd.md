@@ -96,7 +96,7 @@ local   all    all       peer
 
 peer 方式二
 ```
-local   all    all       ident map=t
+local   all    all       peer map=t
 ```
 
 再配置pg_ident.conf
