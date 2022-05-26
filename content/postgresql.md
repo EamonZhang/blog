@@ -157,3 +157,7 @@ wal_keep_segments 已经取消，改用 wal_keep_size
 
 wal_keep_size = wal_keep_segments * wal_segment_size(16MB) 
 ```
+
+## 书籍
+
+[The Internals of PostgreSQL](http://www.interdb.jp/pg/index.html)
