@@ -162,7 +162,7 @@ Checksum: correct
 
 ```
 
-#### 其他方法 [smartctl](linux/smartctl/)
+#### 其他方法 [smartctl](/linux/smartctl/)
 
 ```
 smartctl -a /dev/sdb 
