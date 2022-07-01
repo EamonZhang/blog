@@ -195,7 +195,14 @@ SELECT * FROM get_rebalance_progress();
 #### 查看表分布情况
 
 ```
-select table_name,nodename,sum(shard_size) from citus_shards where citus_table_type = 'distributed' group by nodename , table_name;
+select table_name, nodename as node_name,round(sum(shard_size)*100.0/citus_table_size(table_name),2) percent, pg_size_pretty(sum(shard_size)) as table_size_node,pg_size_pretty(citus_table_size(table_name)) AS table_size from citus_shards where citus_table_type = 'distributed' group by nodename , table_name;
+
+          table_name           | node_name  | percent | table_size_node | table_size 
+-------------------------------+------------+---------+-----------------+------------
+mydistable | 10.10.2.12 |   32.60 | 1424 kB         | 4368 kB
+mydistable | 10.10.2.14 |   60.81 | 2656 kB         | 4368 kB
+(2 rows)
+
 ```
 
 #### 查看数据库分布表size
@@ -416,5 +423,3 @@ select * from citus_add_secondary_node('new-node', 12345, 'primary-node', 12345)
 ```
 select * from citus_update_node(123, 'new-address', 5432);
 ```
-
-#### 
