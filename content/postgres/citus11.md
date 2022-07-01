@@ -132,8 +132,26 @@ select * from pg_dist_node;
 ```
 -- 包括参考表和分布表
 select * from citus_tables ;
+
 -- 包括所有类型的表及分布信息
 select * from citus_shards ;
+
+--- 查看库分布表size
+SELECT logicalrelid AS name,
+       pg_size_pretty(citus_table_size(logicalrelid)) AS size
+  FROM pg_dist_partition where name = '$tablename';
+
+--- 查看分布表分布在每个node上的size 
+select table_name, nodename as node_name,round(sum(shard_size)*100.0/citus_table_size(table_name),2) percent, pg_size_pretty(sum(shard_size)) as table_size_node,pg_size_pretty(citus_table_size(table_name)) AS table_size from citus_shards where citus_table_type = 'distributed' group by nodename , table_name;
+
+          table_name           | node_name  | percent | table_size_node | table_size
+-------------------------------+------------+---------+-----------------+------------
+mydistable | 10.10.2.12 |   32.60 | 1424 kB         | 4368 kB
+mydistable | 10.10.2.14 |   60.81 | 2656 kB         | 4368 kB
+(2 rows)
+
+```
+
 ```
 
 ## 表管理
@@ -190,27 +208,6 @@ SELECT citus_set_default_rebalance_strategy('by_disk_size');
 
 ```
 SELECT * FROM get_rebalance_progress();
-```
-
-#### 查看表分布情况
-
-```
-select table_name, nodename as node_name,round(sum(shard_size)*100.0/citus_table_size(table_name),2) percent, pg_size_pretty(sum(shard_size)) as table_size_node,pg_size_pretty(citus_table_size(table_name)) AS table_size from citus_shards where citus_table_type = 'distributed' group by nodename , table_name;
-
-          table_name           | node_name  | percent | table_size_node | table_size 
--------------------------------+------------+---------+-----------------+------------
-mydistable | 10.10.2.12 |   32.60 | 1424 kB         | 4368 kB
-mydistable | 10.10.2.14 |   60.81 | 2656 kB         | 4368 kB
-(2 rows)
-
-```
-
-#### 查看数据库分布表size
-
-```
-SELECT logicalrelid AS name,
-       pg_size_pretty(citus_table_size(logicalrelid)) AS size
-  FROM pg_dist_partition where name = '$tablename';
 ```
 
 #### 删除本地数据
