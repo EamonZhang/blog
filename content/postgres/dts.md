@@ -90,7 +90,7 @@ tags: []
   ```
   在创建slot时，在源数据库端创建SNAPSHOT快照，基于快照完成全量及增量数据迁移
   -- 发布
-  select pg_create_logical_relication_slot('logical_slot_name001','pgoutput');
+  select pg_create_logical_replication_slot('logical_slot_name001','pgoutput');
   create publication pub1 for all tables
   -- 详细语法
   CREATE PUBLICATION name
@@ -100,8 +100,8 @@ tags: []
   URL: https://www.postgresql.org/docs/12/sql-createpublication.html
   
   -- 订阅
-  create  subscription sub1 connection='hostaddr= xxx port=xxx user=xxx dbname=xxx' 
-   publication pub1 with(create_slot='false',slot=name='logical_slot1'); 
+  create  subscription sub1 connection 'hostaddr= xxx port=xxx user=xxx dbname=xxx' 
+   publication pub1 with(create_slot='false',slot_name='logical_slot_name001'); 
   -- 详细语法
   CREATE SUBSCRIPTION subscription_name
       CONNECTION 'conninfo'
