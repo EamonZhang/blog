@@ -2,7 +2,7 @@
 title: "数据库高可用pgautofailover"
 date: 2022-07-11T15:15:51+08:00
 draft: false
-toc: false
+toc: true 
 categories: ['postgres']
 tags: []
 ---
