@@ -135,7 +135,7 @@ su - postgres -c "/usr/pgsql-14/bin/pg_autoctl create postgres \
 su - postgres -c "/usr/pgsql-14/bin/pg_autoctl -q show systemd --pgdata /var/lib/pgsql/14/data "  > /etc/systemd/system/pgautofailover.service
 
 -- 启动服务
-system start pgautofailover
+systemctl start pgautofailover
 ```
 
 
