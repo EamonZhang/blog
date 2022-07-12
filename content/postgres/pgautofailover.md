@@ -31,11 +31,11 @@ citus同源postgres高可用方案
 
 #### 网络环境
 
-|     IP     |    软件     |
+|     IP / host    |    软件     |
 | :--------: | :---------: |
-| 10.10.2.11 |   monitor   |
-| 10.10.2.12 |   master    |
-| 10.10.2.13 | replication |
+| 10.10.2.11 / node0 |   monitor   |
+| 10.10.2.12 / node1 |   master    |
+| 10.10.2.13 / node2 | replication |
 
 
 
@@ -267,7 +267,7 @@ su - postgres -c "/usr/pgsql-14/bin/pg_autoctl drop node  --destroy --force --na
 -- 创建formation , 默认使用default
 /usr/pgsql-14/bin/pg_autoctl create formation \
  --pgdata /var/lib/pgsql/14/data/ \
- --monitor 'postgres://autoctl_node@node0:5432/pg_auto_failover1?sslmode=require' \
+ --monitor 'postgres://autoctl_node@node0:5432/pg_auto_failover?sslmode=require' \
  --formation formation_name_003 \
  --kind pgsql \
  --dbname pg_auto_failover
