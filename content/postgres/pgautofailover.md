@@ -79,7 +79,8 @@ su - postgres -c "/usr/pgsql-14/bin/pg_autoctl create monitor \
 systemctl start pgautofailover
 
 -- 查看node连接monitor 信息
-/usr/pgsql-14/bin/pg_autoctl show uri --formation monitor --pgdata /var/lib/pgsql/14/data/
+su - postgres -c "/usr/pgsql-14/bin/pg_autoctl show uri --formation monitor --pgdata /var/lib/pgsql/14/data/"
+
 
 postgres://autoctl_node@node0:5432/pg_auto_failover?sslmode=require
 
@@ -106,13 +107,13 @@ su - postgres -c "/usr/pgsql-14/bin/pg_autoctl create postgres \
 su - postgres -c "/usr/pgsql-14/bin/pg_autoctl show file   --pgdata /var/lib/pgsql/14/data/"
 ```
 
-     ```
+```
 -- systemd 管理服务
 su - postgres -c "/usr/pgsql-14/bin/pg_autoctl -q show systemd --pgdata /var/lib/pgsql/14/data "  > /etc/systemd/system/pgautofailover.service
 
 -- 启动服务
 system start pgautofailover
-     ```
+```
 
 ​		创建数据库从节点
 
