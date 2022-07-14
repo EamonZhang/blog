@@ -130,7 +130,7 @@ GROUP BY 1, 2;
 -- 按时间维度统计
 SELECT
     EXTRACT(HOUR FROM created_at) AS hour,
-    hll_cardinality(hll_add_agg(distinct_user_id_count)) AS distinct_count
+    hll_cardinality(hll_union_agg(distinct_user_id_count)) AS distinct_count
 FROM
     github_events_rollup_minute
 WHERE
@@ -151,7 +151,7 @@ ORDER BY 1;
 -- 按事件类型维度统计
 SELECT
     EXTRACT(HOUR FROM created_at) AS hour,
-    hll_cardinality(hll_add_agg(distinct_user_id_count)) AS distinct_push_count
+    hll_cardinality(hll_union_agg(distinct_user_id_count)) AS distinct_push_count
 FROM
     github_events_rollup_minute
 WHERE
