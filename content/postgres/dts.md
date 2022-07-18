@@ -139,7 +139,6 @@ select * from pg_publication;
 select * from pg_publication_tables ;
 
 select pg_size_pretty(pg_wal_location_diff(pg_current_wal_insert_location(), sent_location)), pg_size_pretty(pg_wal_location_diff(pg_current_wal_insert_location(), replay_location)), * from pg_stat_replication ;
-
 ```
 
 ### 订阅端
@@ -148,6 +147,7 @@ select pg_size_pretty(pg_wal_location_diff(pg_current_wal_insert_location(), sen
 -- 订阅端
 select * from pg_subscription ;
 select * from pg_stat_subscription ;
+select * from pg_replication_origin_status ;
 select pg_size_pretty(pg_wal_location_diff(received_lsn, latest_end_lsn)), * from pg_stat_subscription ;
 ```
 
