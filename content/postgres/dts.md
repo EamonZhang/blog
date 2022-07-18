@@ -137,7 +137,6 @@ select * from pg_stat_replication ;
 select * from pg_replication_slots ;
 select * from pg_publication;
 select * from pg_publication_tables ;
-
 select pg_size_pretty(pg_wal_location_diff(pg_current_wal_insert_location(), sent_location)), pg_size_pretty(pg_wal_location_diff(pg_current_wal_insert_location(), replay_location)), * from pg_stat_replication ;
 ```
 
@@ -181,11 +180,11 @@ select pg_size_pretty(pg_wal_location_diff(received_lsn, latest_end_lsn)), * fro
 
 - 删除逻辑复制slot ，发布订阅。业务切割后处理
 
-  ```
-  DROP PUBLICATION mypublication;
-  DROP SUBSCRIPTION mysub;
-  select pg_drop_replication_slot('myslot');
-  ```
+```
+DROP PUBLICATION mypublication;
+DROP SUBSCRIPTION mysub;
+select pg_drop_replication_slot('myslot');
+```
 
 ## 业务切割
 
