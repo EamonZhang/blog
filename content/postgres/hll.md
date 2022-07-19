@@ -19,6 +19,8 @@ tags: []
 create extension hll;
 ```
 
+HyperLogLog 是一种算法, 可以用来估算数据集的基数. 基数是指一个集合中不同值的数目, 等同于 `COUNT(DISTINCT field)` 返回值. 对于超大数据集来说, 精确的基数统计往往需要消耗大量的内存与时间, 并且消耗的内存与时间会随着数据集基数的增加而成比例增加. 而 HyperLogLog 能够在常数级的内存与时间下, 以极低的误差来获取数据集基数的近似统计.
+
 ## 简单例子
 
 ```
@@ -220,5 +222,22 @@ WHERE
     event_type = 'PushEvent'::text;
 ```
 
+
+## 参数优化
+
+​			在分析型数据库PostgreSQL版中, HyperLogLog 的误差与内存消耗量受如下参数控制:
+
+- log2m, 该参数控制着 HyperLogLog 对数据集基数估算的误差为: `1.04 / math.sqrt(2 ** log2m)`. 该参数同时也控制着 HyperLogLog 内存消耗量.
+- regwidth, 该参数与 log2m 一起决定了 HyperLogLog 内存消耗量最多为 `(2 ** log2m) * regwidth / 8` 字节. 同时该函数也决定了 HyperLogLog 所能估算数据集基数的最大值.
+
+```
+默认值
+hll(log2m=11, regwidth=5, expthresh=-1, sparseon=1)	
+```
+
+```
+设置参数
+select hll_set_defaults(16,5,-1,1);
+```
 
 
