@@ -401,8 +401,21 @@ select * from pg_publication;
 
 ````
 
+### docker  citus 
 
+```
+# run PostgreSQL with Citus on port 5500
+docker run -d --name citus -p 5500:5432 -e POSTGRES_PASSWORD=mypassword citusdata/citus
 
+# connect using psql within the Docker container
+docker exec -it citus psql -U postgres
+
+# set user postgres password 111111
+alter user postgres with encrypted password '111111';
+
+# or, connect using local psql
+psql -U postgres -d postgres -h localhost -p 5500
+```
 
 
 plugin 下载地址，下载后解压到connetor 文件目录下并重新启动kafka connetor
