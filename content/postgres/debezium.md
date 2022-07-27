@@ -510,4 +510,123 @@ source connetor 端不需要修改    、只需要在 sink connetor 端做如下
 }
 ```
 
+## Kafka Connect REST API
+
+为了方便查看json 建议安装jq 
+
+``` yum install epel-release jq -y ```
+
+ 官方文档
+
+https://kafka.apache.org/documentation.html#connect_rest
+
+### 获取 Connect 集群的基本信息
+
+```sh
+curl -s -X GET localhost:8083/ | jq
+```
+
+### 列出 Kafka Connect Worker 上安装的插件
+
+```json
+# curl -s -X GET localhost:8083/connector-plugins | jq
+```
+
+### 创建一个连接器
+
+```sh
+inventory-connector# curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 192.168.0.40:8083/connectors/ -d @inventory-connector.json
+```
+
+### 获取所有现有的连接器名称
+
+```sh
+# curl -s -X GET localhost:8083/connectors/ | jq
+```
+
+### 获取连接器的配置信息
+
+```sh
+# curl -s -X GET localhost:8083/connectors/inventory-connector | jq
+```
+
+### 获取连接器的状态信息
+
+```sh
+# curl -s -X GET localhost:8083/connectors/inventory-connector/status | jq
+```
+
+### 获取当前为连接器运行的任务列表
+
+```
+# curl -s -X GET localhost:8083/connectors/inventory-connector/tasks | jq
+```
+
+### 获取任务的当前状态
+
+```
+# curl -s -X GET localhost:8083/connectors/inventory-connector/tasks/0/status | jq
+```
+
+### 获取连接器使用的主题(topics)列表
+
+```
+# curl -s -X GET localhost:8083/connectors/oracle-scott-connector/topics | jq
+```
+
+### 清空连接器的活动主题(topics)列表
+
+```
+# curl -s -X PUT localhost:8083/connectors/oracle-scott-connector/topics/reset
+```
+
+### 暂停连接器任务
+
+```
+# curl -s -X PUT localhost:8083/connectors/inventory-connector/pause
+```
+
+### 恢复连接器任务
+
+```
+# curl -s -X PUT localhost:8083/connectors/inventory-connector/resume
+```
+
+### 删除连接器
+
+```
+# curl -s -X DELETE localhost:8083/connectors/inventory-connector
+```
+
+### 更新连接器
+
+```
+# curl -i -X PUT -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/inventory-connector/config -d @inventory-connector.json
+```
+
+### 重启连接器和任务(tasks)
+
+- 语法
+
+```
+POST /connectors/{name}/restart?includeTasks=<true|false>&onlyFailed=<true|false>
+# "includeTasks=true": 重新启动连接器实例和任务实例
+# "includeTasks=false"(默认): 仅重新启动连接器实例
+# "onlyFailed=true": 仅重新启动具有 FAILED 状态的实例
+# "onlyFailed=false"(默认): 重新所有实例
+```
+
+- 示例
+
+```
+# curl -s -X POST localhost:8083/connectors/inventory-connector/restart
+```
+
+- 默认只重新启动连接器并不会重新启动其所有任务。因此，您也可以重新启动失败的单个任务，然后再次获取其状态：
+
+```
+# curl -s -X POST localhost:8083/connectors/inventory-connector/tasks/0/restart
+# curl -s -X GET localhost:8083/connectors/inventory-connector/tasks/0/status | jq
+```
+
 
