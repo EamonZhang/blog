@@ -2,7 +2,7 @@
 title: "利用debezium 实现数据变更捕获"
 date: 2022-07-27T10:37:46+08:00
 draft: false
-toc: false
+toc: true 
 categories: ['postgres']
 tags: []
 ---
