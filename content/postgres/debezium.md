@@ -51,8 +51,6 @@ docker run -it --rm --name kafka -p 9092:9092 --link zookeeper:zookeeper quay.io
 
 -- 启动mysql
 docker run -it --rm --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=debezium -e MYSQL_USER=mysqluser -e MYSQL_PASSWORD=mysqlpw quay.io/debezium/example-mysql:1.9
-
-
 ```
 
 ### 访问源数据库
