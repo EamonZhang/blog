@@ -498,7 +498,7 @@ source connetor 端不需要修改    、只需要在 sink connetor 端做如下
 
 ####      配置 sink-postgres-alltables.json 
 
-```
+```json
 {
     "name": "test-jdbc-sink-alltables",
     "config": {
@@ -541,14 +541,14 @@ curl -s -X GET localhost:8083/ | jq
 
 ### 列出 Kafka Connect Worker 上安装的插件
 
-```json
+```sh
 # curl -s -X GET localhost:8083/connector-plugins | jq
 ```
 
 ### 创建一个连接器
 
 ```sh
-inventory-connector# curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 192.168.0.40:8083/connectors/ -d @inventory-connector.json
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 192.168.0.40:8083/connectors/ -d @inventory-connector.json
 ```
 
 ### 获取所有现有的连接器名称
@@ -571,19 +571,19 @@ inventory-connector# curl -i -X POST -H "Accept:application/json" -H "Content-Ty
 
 ### 获取当前为连接器运行的任务列表
 
-```
+```sh
 # curl -s -X GET localhost:8083/connectors/inventory-connector/tasks | jq
 ```
 
 ### 获取任务的当前状态
 
-```
+```sh
 # curl -s -X GET localhost:8083/connectors/inventory-connector/tasks/0/status | jq
 ```
 
 ### 获取连接器使用的主题(topics)列表
 
-```
+```sh
 # curl -s -X GET localhost:8083/connectors/oracle-scott-connector/topics | jq
 ```
 
