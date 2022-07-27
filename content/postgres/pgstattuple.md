@@ -280,7 +280,7 @@ from pg_freespace('tablename');
 结合统计情况，利用pg_repack可不停服处理。处理前查看是否有vacuum进程正在执行，避免冲突。
 
 ```
--- @auth Vonng
+-- CREATE SCHEMA 
 
 CREATE SCHEMA IF NOT EXISTS monitor;
 CREATE EXTENSION IF NOT EXISTS pg_repack WITH SCHEMA monitor;
