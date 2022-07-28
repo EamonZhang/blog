@@ -142,7 +142,7 @@ $ docker run -it --rm --name watcher --link zookeeper:zookeeper --link kafka:kaf
 - docker-compost-postgres.yaml
 - register-postgres.json 
 
-<details> docker-compost-postgres.yaml
+docker-compost-postgres.yaml
 
 ```
 version: '2'
@@ -186,7 +186,6 @@ services:
 #    volumes:
 #     - ./debezium-connector-postgres:/kafka/connect/debezium-connector-postgres
 ```
-</details>
 ​      register-postgres.json
 
 ```
