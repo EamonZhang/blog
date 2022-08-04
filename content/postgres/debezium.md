@@ -311,7 +311,11 @@ register-postgres.json
 	    "table.include.list": "inventory.orders,inventory.products",
 	    "publication.name": "dbz_inventory_connector",
 	    "publication.autocreate.mode": "all_tables",
-	    "plugin.name": "pgoutput"
+	    "plugin.name": "pgoutput",	
+            "topic.creation.default.replication.factor": 3,
+            "topic.creation.default.partitions": 10,
+            "topic.creation.default.cleanup.policy": "delete",
+            "topic.creation.default.compression.type": "lz4"
     }
 }
 ```
