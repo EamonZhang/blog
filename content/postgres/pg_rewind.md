@@ -1,5 +1,5 @@
 ---
-title: "PG主从切换 pg_rewind"
+title: "pg_rewind 时间线对齐"
 date: 2019-01-30T10:16:17+08:00
 categories: ["postgres"]
 #toc: true
@@ -81,7 +81,7 @@ sudo su - postgres
 # 测试 -n
 /usr/pgsql-10/bin/pg_rewind -n -D /var/lib/pgsql/10/data/ --source-server="hostaddr=10.1.88.72 user=postgres port=5432"
 # 正式执行
-/usr/pgsql-10/bin/pg_rewind -D /var/lib/pgsql/10/data/ --source-server="hostaddr=10.1.88.72 user=postgres port=5432"
+/usr/pgsql-10/bin/pg_rewind -D /var/lib/pgsql/10/data/ --source-server="hostaddr=10.1.88.72 user=postgres port=5432" -P
 ```
 
 c 修改 recovery.conf
