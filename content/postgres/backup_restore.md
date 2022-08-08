@@ -11,6 +11,8 @@ draft: false
 备份：pg_dump -U postgres -v -F c -Z 4 -f ***.backup dbname  9压缩率最狠
 恢复：pg_restore -U postgres -v -j 8 -d dbname ***.backup   8是采用8个线程
 
+注意事项： 在恢复database前需要先创建好extentions
+
 备份表：pg_dump -U postgres -t tablename dbname > 33.sql
 恢复表：psql -U postgres -d dbname < 33.sql
 
