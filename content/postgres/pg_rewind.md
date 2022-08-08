@@ -121,3 +121,23 @@ primary_conninfo = 'user=postgres passfile=''/root/.pgpass'' host=10.1.88.72 por
 ## 更多
 
 https://github.com/digoal/blog/blob/master/201901/20190128_02.md
+
+## 应用
+
+典型应用场景，在发生故障转移后，原主库重新加入集群中。
+
+## 原理
+
+基本思想是将所有文件系统级的变化从源集群复制到目标集群。
+
+1 连接到源端数据库，可以对比找到本地数据库分叉点之前最后一次checkpoint的在wal日志中位置，解析分叉点后的WAL，记录这些事务修改了哪些数据块
+
+2 对于数据文件，只从新主拉取被旧主修改了的数据块，并覆盖旧主数据文件中对应的数据块
+
+3 拷贝WAL segments, `pg_xact`,  及配置文件， 忽略 `pg_dynshmem/`, `pg_notify/`, `pg_replslot/`, `pg_serial/`, `pg_snapshots/`, `pg_stat_tmp/`, and `pg_subtrans/` 
+
+4 把旧主改成恢复模式，恢复的起点则设置为分叉点前的最近一次checkpoint
+
+5 当启动旧主库后，自动重放wal日志即可完成数据的同步
+
+参加官方文档 https://www.postgresql.org/docs/14/app-pgrewind.html
