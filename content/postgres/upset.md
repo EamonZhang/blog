@@ -48,6 +48,16 @@ WHERE
 	AND NAME <> '更新' ---过滤 没有必要的更新
 ```
 
+#### 数据存在则忽略，不存在则插入
+
+```
+INSERT INTO GOODS VALUES ( 104, '4', '赵六' ) 
+ON CONFLICT ON CONSTRAINT pr_key_cd DO NOTHING;
+
+-- 另一种实现方式
+insert into goods select 103,'3','赵六' from (select 1) temp where not exists (select 1 from goods where store_cd=103 and good_cd = '3');
+```
+
 上面的两种的写法，是先执行insert如果主键冲突则执行update，没有冲突就执行insert了。
 
 ### 先执行update语句
