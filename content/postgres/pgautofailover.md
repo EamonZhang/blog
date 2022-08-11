@@ -106,13 +106,14 @@ su - postgres -c "/usr/pgsql-14/bin/pg_autoctl create postgres \
 su - postgres -c "/usr/pgsql-14/bin/pg_autoctl show file   --pgdata /var/lib/pgsql/14/data/"
 ```
 
-     ```
-     -- systemd 管理服务
-     su - postgres -c "/usr/pgsql-14/bin/pg_autoctl -q show systemd --pgdata /var/lib/pgsql/14/data "  > /etc/systemd/system/pgautofailover.service
-     
-     -- 启动服务
-     systemctl start pgautofailover
-     ```
+
+```
+-- systemd 管理服务
+su - postgres -c "/usr/pgsql-14/bin/pg_autoctl -q show systemd --pgdata /var/lib/pgsql/14/data "  > /etc/systemd/system/pgautofailover.service
+   
+-- 启动服务
+systemctl start pgautofailover
+```
 
 ​		创建数据库从节点
 
