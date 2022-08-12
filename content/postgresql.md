@@ -99,7 +99,7 @@ toc: true
 - [PG高可用Patroni搭建](/postgres/patroni)
 - [PG高可用Patroni管理进阶](/postgres/patroni02)
 - [PG高可用Repmgr搭建](/postgres/repmgr)
-- [来自citus的高可用方案 pg_auto_failover ](https://github.com/citusdata/pg_auto_failover)
+- [来自citus的高可用方案 pg_auto_failover ](/postgres/pgautofailover)
 
 ## 索引
 
