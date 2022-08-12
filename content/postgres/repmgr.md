@@ -38,13 +38,13 @@ tags: []
 
 - 安装PG10
 
-  ```
-  $ yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+```
+ $ yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
   $ yum update -y 
   $ yum install -y postgresql10-server postgresql10  postgresql10-contrib
   # 只有主库需要初始化
   $ sudo su postgres -c  "/usr/pgsql-10/bin/initdb  --data-checksums -D /var/lib/pgsql/10/data" 
-  ```
+```
 
 - 安装repmgr
 
