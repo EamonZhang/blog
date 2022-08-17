@@ -137,6 +137,15 @@ fi
 done
 ```
 
+## 定期全备份及清理
+
+cat /etc/cron.weekly/pg_backup_retain.sh 例如每周一个全备份，保留近半年数据
+
+```
+source mydir/wal-g.env &&  wal-g  backup-push $PGDATA
+source mydir/wal-g.env &&  wal-g delete retain FULL 26 --confirm
+```
+
 ## 注意事项
 
 1 需要先进行wal日志的备份在进行全备份。否则在恢复的时候可能会遗漏期间的wal日志。
@@ -150,3 +159,58 @@ done
 归档备份wal日志 会比生产系统的数据库滞后一个wal文件 。 是当wal日志写满或切换写新wal日志的时候触发的归档 。
 
 如果需要使用归档文件恢复数据库时需要考虑时候可以找到最近的wal日志文件，比如在从库中。
+
+
+## 其他有用脚本
+
+下载一段连续范围内的wal日志文件 到目录 walbackup 目录中，防止下载过程中出现网络问题等。可重复多次执行
+
+cat refetch_wal.sh
+```#! /bin/bash
+
+walfiles=$(python calc_wal.py $1 $2)
+
+source mydir/wal-g.env
+
+for wal_seq in $walfiles; do
+ if [[ ! -f walbackup/"$wal_seq" ]];then
+   wal-g wal-fetch $wal_seq walbackup/$wal_seq
+   echo "fetch wal file " $wal_seq
+ fi
+done
+```
+
+cat calc_wal.py
+```
+import sys
+
+
+def next_str(start):
+    s_8 = start[:8]
+    s_16 = start[8:16]
+    s_24 = start[16:]
+    if s_24.endswith('FF'):
+        s_24 = hex(int('01',base=16))[2:].zfill(8)
+        s_16 = hex(int(s_16, base=16) + 1)[2:].zfill(8)
+    else:
+        s_24 = hex(int(s_24, base=16) + 1)[2:].zfill(8)
+    return ''.join([s_8, s_16, s_24]).upper()
+
+
+def get_all(start, end):
+    start = start.upper()
+    end = end.upper()
+    new_seq = None
+    print(start)
+    while new_seq != end:
+        new_seq = next_str(new_seq if new_seq is not None else start)
+        print(new_seq)
+
+
+if __name__ == "__main__":
+    get_all(sys.argv[1], sys.argv[2])
+```
+
+使用方法
+
+refetch_wal.sh wal开始文件名 wal结束文件名
