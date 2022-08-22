@@ -2,7 +2,7 @@
 title: "Minio存储类别"
 date: 2022-08-22T11:37:58+08:00
 draft: false
-toc: false
+toc: true 
 categories: ['minio']
 tags: []
 ---
