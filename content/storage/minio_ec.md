@@ -41,7 +41,13 @@ minio采用纠删码的方式保证数据的可靠性。不同于raid5 、minio�
 
 - **[ Erasure Sets](https://docs.min.io/minio/baremetal/concepts/erasure-coding.html#erasure-sets).**
 
+ Erasure set size is automatically calculated based on the number of disks. MinIO  supports unlimited number of disks but each erasure set can be upto 16  disks and a minimum of 2 disks
+
 首先需要了解一个概念， Erasure Sets。 他是一集合，就是前面纠删码中提到的k+M，minio会根据集群中的磁盘总数，将磁盘划分为多个组，每个组就是一个单独的集合（Erasure Sets), 每个集合拥有的磁盘数为4-16个。
+
+参考关系表格见 https://github.com/minio/minio/blob/master/docs/distributed/SIZING.md
+
+[具体计算ES](https://min.io/product/erasure-code-calculator)
 
 - minio中存储类别有两个级别，**STANDARD**、**REDUCED_REDUNDANCY**
 
@@ -174,3 +180,21 @@ log.Println("Uploaded", "my-objectname", " of size: ", n, "Successfully.")
 参考
 
 https://github.com/minio/minio/blob/9c605ad153fec94df496906bb94ec8733b5620df/docs/erasure/storage-class/README.md
+
+
+
+## 思考
+
+**minio 分布式部署方案为什么推荐只是需要4块磁盘，而不是3块**
+
+如果只有3块磁盘，EC最大值为 小于等于3/2 即EC 1， 当其中任何一块磁盘坏掉的情况下，整个集群降为只读模式。
+
+如果有4块磁盘，EC为2，当坏掉其中一块磁盘的时候，整个集群依然具有读写能力。
+
+
+
+理解minio中EC 对集群如何做到高可用及集群的扩容将非常有帮助
+
+
+
+
