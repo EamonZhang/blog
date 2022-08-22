@@ -3,7 +3,7 @@ title: "minio 轻量级对象存储"
 date: 2019-03-18T16:59:48+08:00
 draft: false
 toc: true 
-categories: ['存储']
+categories: ['minio']
 tags: []
 ---
 
