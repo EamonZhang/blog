@@ -180,6 +180,8 @@ X-Xss-Protection: 1; mode=block
 
 #### 使用prometheus 监控
 
+通过命令 `mc admin prometheus generate ` 自动生成
+
 认证模式 prometheus 配置
 ```
 scrape_configs:
