@@ -11,7 +11,7 @@ tags: []
 
 minio 完全实现了s3协议，使用简单方便。 支持多机模式，提高数据可用性和整体容量。
 
-限制， 最多5T存储。 单个文件最大5T。 
+限制，  单个文件最大5T。 
 
 缺点， 不能在线扩容。开发者认为扩容应该是开发人员需要解决的问题。
 
@@ -231,5 +231,39 @@ mc mirror --force --remove --watch  pgsql/data/ myminio/pgsqlbkp
 [rclone备份应用参考](../rclone/)
 
 
+
+## 用户管理
+
+minio 通过策略管理用户权限
+
+```shell
+mc admin user add myminio newuser newuser123
+mc admin policy set myminio readonly user=newuser
+```
+
+自定义策略
+
+```
+cat mypolicy.json
+{
+  "Version": "2022",         
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [                      //  可以做出的行动（权限）
+		"s3:ListAllMyBuckets",          //  查看所有的“桶”列表
+		"s3:ListBucket",               //  查看桶内的对象列表
+		"s3:GetBucketLocation",         
+		"s3:GetObject",               //   下载对象
+		"s3:PutObject",               //   上传对象
+		"s3:DeleteObject"             //   删除对象
+      ],
+      "Resource": [
+        "arn:aws:s3:::*"              // （应用到的资源，*表示所有，也可以用路径来控制范围。arn:aws:s3是命名空间）
+      ]
+    }
+  ]
+}
+```
 
 
