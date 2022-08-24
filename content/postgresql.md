@@ -54,9 +54,13 @@ toc: true
 - [数据预加载](/postgres/pg_prewarm)
 - [kylin系统postgresql编译安装](/postgres/compile_kylin)
 
+## 访问数据库
+
+- [psql](https://psql-tips.org/psql_tips_all.html)
+- [pgweb](https://github.com/sosedoff/pgweb)
+
 ## 管理
 
-- [psql tips](https://psql-tips.org/psql_tips_all.html)
 - [pg_pathman 分区表](/postgres/pg_pathman)
 - [范式约束](/postgres/normal-form)
 - [DBA 日常](/postgres/dba)
