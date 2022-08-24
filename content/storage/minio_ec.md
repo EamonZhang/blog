@@ -67,7 +67,21 @@ export MINIO_STORAGE_CLASS_RRS=EC:2
 
 ```
 # 命令修改EC:N
-mc admin config get myplay/ storage_class
+
+$mc admin  config get  myplay/ storage_class
+storage_class standard=EC:3 rrs=EC:1
+
+$mc admin  config set  myplay/ storage_class standard=EC:2 rrs=EC:1
+Successfully applied new settings.
+```
+
+```
+查看修改 ec 值对总容量的影响
+$ mc admin  decommission status myplay/
+┌─────┬───────────────────────────────────────────────┬─────────────────────────────────┬────────┐
+│ ID  │ Pools                                         │ Capacity                        │ Status │
+│ 1st │ http://***** │ 1.1 TiB (used) / 44 TiB (total) │ Active │
+└─────┴───────────────────────────────────────────────┴─────────────────────────────────┴────────┘
 ```
 
 - **默认值**
