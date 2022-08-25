@@ -73,6 +73,8 @@ getenforce
 
 ```
 sed -i '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
+
+setenforce 0
 ```
 
 ## 设置 firewalld
