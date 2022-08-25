@@ -71,6 +71,10 @@ getenforce
 修改 临时 setenforce 0 
 永久 vi /etc/sysconfig/selinux
 
+```
+sed -i '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
+```
+
 ## 设置 firewalld
 
 ## 设置 ssh 
