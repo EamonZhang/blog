@@ -236,12 +236,39 @@ mc mirror --force --remove --watch  pgsql/data/ myminio/pgsqlbkp
 
 minio 通过策略管理用户权限
 
-```shell
-mc admin user add myminio newuser newuser123
-mc admin policy set myminio readonly user=newuser
+定义策略
+```
+cat > getonly.json << EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::my-bucketname/*"
+      ],
+      "Sid": ""
+    }
+  ]
+}
+EOF
 ```
 
-自定义策略
+设置策略
+```
+mc admin policy add myminio getonly getonly.json
+```
+
+创建用户并绑定策略
+```shell
+mc admin user add myminio newuser newuser123
+mc admin policy set myminio getonly user=newuser
+```
+
+自定义其他策略
 
 ```
 cat mypolicy.json
