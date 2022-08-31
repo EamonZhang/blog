@@ -173,7 +173,11 @@ Vagrant.configure("2") do |config|
             end
         end
     config.vm.provision "shell", inline: <<-SHELL
-      #yum update -y
+      # 可以root用户 登录 密码：vagrant
+      sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
+      sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+      systemctl restart sshd
+
     SHELL
 end
 ```
