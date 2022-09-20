@@ -109,6 +109,12 @@ log-queries
 #cname 配置未生效
 #cname=web.zhangeamon.com,web.service.zhangeamon.com 
 #cname=a.a.com,a.b.com
+#cname 使用限制说明。本地/etc/hosts
+Provide an alias for a "local" DNS name. Note that this _only_ works
+# for targets which are names from DHCP or /etc/hosts. Give host
+# "bert" another name, bertrand
+#cname=bertand,bert
+
 ```
 
 #### 负载均衡
