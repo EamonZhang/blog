@@ -33,7 +33,7 @@ consul agent -server -bootstrap-expect=3 -data-dir=/tmp/consul -node=10.1.88.86 
 
 服务发现配置
 
-cat /etc/consul.d/web/json
+cat /etc/consul.d.web/json
 ```
 {
   "services":[
@@ -85,6 +85,65 @@ dig @127.0.0.1 -p 8600 web.service.zhangeamon.com
 python -m SimpleHTTPServer 8000
 ```
 服务开启时解析到 10.1.88.85 服务关闭时 10.1.88.85 被剔除。
+
+cat agent-service.json
+```
+{
+  "ID": "redis1",
+  "Name": "redis",
+  "Tags": ["primary", "v1"],
+  "Address": "10.10.2.11",
+  "Port": 8000,
+  "Meta": {
+    "redis_version": "4.0"
+  },
+  "EnableTagOverride": true,
+  "Check": {
+    "checkID": "redis001",
+    "name": "redis001",
+    "DeregisterCriticalServiceAfter": "1m",
+    "ttl":"30s",
+    "status": "passing"
+  },
+  "Weights": {
+    "Passing": 10,
+    "Warning": 1
+  }
+}
+```
+cat agent-service.json
+```
+{
+  "ID": "redis1",
+  "Name": "redis",
+  "Tags": ["primary", "v1"],
+  "Address": "10.10.2.11",
+  "Port": 8000,
+  "Meta": {
+    "redis_version": "4.0"
+  },
+  "EnableTagOverride": true,
+  "Check": {
+    "DeregisterCriticalServiceAfter": "1m",
+    "http": "http://10.10.2.11:8000",
+    "Interval": "10s",
+    "Timeout": "5s"
+  },
+  "Weights": {
+    "Passing": 10,
+    "Warning": 1
+  }
+}
+```
+服务注册
+```
+curl     --request PUT     --data @agent-service.json     http://10.10.2.12:8500/v1/agent/service/register?replace-existing-checks=true
+```
+
+ttl 状态维护
+```
+curl     --request PUT     --data @agent-service.json     http://10.10.2.12:8500/v1/agent/check/pass/redis001
+```
 
 #### dnsmasq  配置
 
