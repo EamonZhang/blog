@@ -31,9 +31,9 @@ consul agent -server -bootstrap-expect=3 -data-dir=/tmp/consul -node=10.1.88.85 
 consul agent -server -bootstrap-expect=3 -data-dir=/tmp/consul -node=10.1.88.86 -bind=10.1.88.86 -client=0.0.0.0 -datacenter=bj -domain=zhangeamon.com -join=10.1.88.84 -config-dir=/etc/consul.d -ui
 ```
 
-服务发现配置
+#### 服务发现配置
 
-cat /etc/consul.d.web/json
+cat /etc/consul.d.web.json
 ```
 {
   "services":[
@@ -85,6 +85,8 @@ dig @127.0.0.1 -p 8600 web.service.zhangeamon.com
 python -m SimpleHTTPServer 8000
 ```
 服务开启时解析到 10.1.88.85 服务关闭时 10.1.88.85 被剔除。
+
+#### API 服务发现
 
 cat agent-service.json
 ```
