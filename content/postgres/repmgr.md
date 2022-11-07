@@ -129,7 +129,7 @@ tags: []
   postgres=#\c repmgr
   repmgr=# create extension repmgr;
   CREATE EXTENSION
-  repmgr=#GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA repmgr TO repmgr ;
+  repmgr=# GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA repmgr TO repmgr ;
   ```
 
 - repmgr
