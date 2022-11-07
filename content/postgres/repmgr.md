@@ -326,7 +326,7 @@ tags: []
 
 ```
 # 在计划提升为主库的节点上执行
-/usr/pgsql-10/bin/repmgr -f /etc/repmgr/10/repmgr.conf standby switchover 
+/usr/pgsql-10/bin/repmgr -f /etc/repmgr/10/repmgr.conf standby switchover --siblings-follow 
 
 # 查看切换结果 
 /usr/pgsql-10/bin/repmgr -f /etc/repmgr/10/repmgr.conf cluster show
