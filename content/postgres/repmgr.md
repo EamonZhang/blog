@@ -466,9 +466,88 @@ $ /usr/pgsql-10/bin/repmgr -f /etc/repmgr/10/repmgr.conf standby unregister --no
 
 
 ```
- $ repmgr -f /etc/repmgr.conf cluster event
+ $ repmgr -f /etc/repmgr/10/repmgr.conf cluster event
 ```
 
 # 自动failover
+
+修改配置
+
+vi postgresql.conf
+```
+shared_preload_libraries = 'repmgr'
+```
+
+vi /etc/repmgr/10/repmgr.conf
+```
+failover=automatic
+promote_command='/usr/pgsql-10/bin/repmgr standby promote -f /etc/repmgr/10/repmgr.conf --log-to-file'
+follow_command='/usr/pgsql-10/bin/repmgr standby follow -f /etc/repmgr/10/repmgr.conf --log-to-file --upstream-node-id=%n'
+log_file='/var/lib/pgsql/repmgrd.log'
+monitoring_history=true #（启用监控参数）
+monitor_interval_secs=5 #（定义监视数据间隔写入时间参数）
+reconnect_attempts=10 #（故障转移之前，尝试重新连接主库次数（默认为6）参数）
+reconnect_interval=5 #（每间隔5s尝试重新连接一次参数
+```
+
+重启 postgres
+
+```
+repmgr node service --action=restart
+```
+
+启动 repmgrd
+
+```
+systemctl start repmgr-10
+systemctl enable repmgr-10
+```
+
+测试
+
+略
+
+主节点重新加入集群
+
+```
+# 全部原主节点保持关闭状态。 首先将执行pg_rewind ->   自动启动服务 - > 注册服务
+ repmgr node rejoin -d 'host=node1 dbname=repmgr user=repmgr' --force-rewind --config-files=postgresql.conf,postgresql.auto.conf --verbose --dry-run
+ repmgr node rejoin -d 'host=node1 dbname=repmgr user=repmgr' --force-rewind --config-files=postgresql.conf,postgresql.auto.conf --verbose
+```
+
+#### 自动failover 几点说明
+
+为预防网络脑裂发生： repmgr 做了如下努力： 1 ，使用见证节点。主要应用于只有主从两个节点的场景， 将见证节点与主节点部署在同一个网络区间。 当主节点与见证节点同时不可见时，认为是网络错误，不发生切换。当见证节点可见，主节点不可见时，认为主节点失效，触发切换。
+
+引入见证节点提高了维护成本。 
+
+多IDC网络场景，方案2 ： 使用location 标记服务所在的位置。当与主节点location相同的节点都不可见时，认为是网络错误，不发生切换。如果集群中没有其他节点与主节点的location配置相同，则永远不发生切换。
+
+举例： 三个IDC，三个pg服务。location分别设置为dc1（主节点），dc2（从节点），dc3（从节点）。 当dc1 节点发生故障时不会发生故障转移。 因为集群中location 为dc1的节点（只有一个）都不可见。
+
+合理的设置应该为cd1(主节点) ,dc1(一个从)，dc2（另一个从）。 此时当dc1 发生以外时，可故障转移。
+
+注意事项： 当主节点网络问题。如网卡，网线故障。服务正常的情况下。集群也会发生故障转移。当网络恢复的时候发生脑裂。 主要问题。当主节点脱离集群时没有彻底关闭服务。repmgr不能管理pg服务,将其关闭。
+
+#### location 修改
+
+localtion 参数在高可用架构中为防止网络分区问题发挥重要作用。 发生故障转移后location 通常也需要重新设计。
+
+修改 /etc/repmgr/10/repmgr.conf
+
+生效
+```
+repmgr standby register --force
+systemctl restart repmgr-10
+```
+
+查看
+```
+repmgr cluster show
+或
+select * from repmgr.nodes;
+```
+
+[修改location](https://repmgr.org/docs/current/repmgrd-basic-configuration.html#REPMGRD-RELOADING-CONFIGURATION)
 
 
