@@ -82,7 +82,7 @@ tags: []
   $ ssh $远端服务器}
   ```
 
-# 配置
+#### 配置
 
 - PG 配置
 
@@ -155,9 +155,7 @@ tags: []
   service_reload_command  = 'sudo systemctl reload postgresql-10' 
   ```
 
-# 注册主库
-
-
+## 注册主库
 
 - 启动数据库
 
@@ -242,7 +240,7 @@ tags: []
   conninfo           | host=node1 port=5432 user=repmgr dbname=repmgr
   ```
 
-# 加入从库
+## 加入从库
 
 加入node2 ，node3 两个节点
 
@@ -322,7 +320,7 @@ tags: []
    3  | node3 | standby |   running | node1    | default  | 100      | 2        | host=node2 user=repmgr dbname=repmgr          
   ```
 
-# 主动switchover
+## 主动switchover
 
 ```
 # 在计划提升为主库的节点上执行
@@ -340,13 +338,13 @@ tags: []
 
 注意事项，1 原主库上的slot 仍然存在（后期测试几次发现会自动删除） 2 级联复制的情况下避免最下游节点提升主
 
-# 修改级联关系
+## 修改级联关系
 
 ```
 /usr/pgsql-10/bin/repmgr -f /etc/repmgr/10/repmgr.conf standby follow --upstream-node-id 1
 ```
 
-# 被动switchover
+## 被动switchover
 
 模拟主节点故障
 
@@ -463,13 +461,11 @@ node1 节点故障不可恢复情况
 $ /usr/pgsql-10/bin/repmgr -f /etc/repmgr/10/repmgr.conf standby unregister --node-id
  ```
 
-
-
 ```
  $ repmgr -f /etc/repmgr/10/repmgr.conf cluster event
 ```
 
-# 自动failover
+## 自动failover
 
 修改配置
 
