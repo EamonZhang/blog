@@ -523,7 +523,18 @@ systemctl enable repmgr-10
 
 合理的设置应该为cd1(主节点) ,dc1(一个从)，dc2（另一个从）。 此时当dc1 发生以外时，可故障转移。
 
-注意事项： 当主节点网络问题。如网卡，网线故障。服务正常的情况下。集群也会发生故障转移。当网络恢复的时候发生脑裂。 主要问题。当主节点脱离集群时没有彻底关闭服务。repmgr不能管理pg服务,将其关闭。
+#### 注意事项： 当主节点网络问题。如网卡，网线故障。服务正常的情况下。集群也会发生故障转移。当网络恢复的时候发生脑裂。 主要问题。当主节点脱离集群时没有彻底关闭服务。repmgr不能管理pg服务,将其关闭。
+
+可以如下设置，通过确定与从节点连接个数决定是否关闭当前服务。在command中关闭当前pg
+```
+#child_nodes_check_interval=5           # Interval (in seconds) to check for attached child nodes (standbys)
+#child_nodes_connected_min_count=-1     # Minimum number of child nodes which must remain connected, otherwise
+                                        # disconnection command will be triggered
+#child_nodes_disconnect_min_count=-1    # Minimum number of disconnected child nodes required to execute disconnection command
+                                        # (ignored if "child_nodes_connected_min_count" set)
+#child_nodes_disconnect_timeout=30      # Interval between child node disconnection and disconnection command execution
+child_nodes_disconnect_command='' 
+```
 
 #### location 修改
 
