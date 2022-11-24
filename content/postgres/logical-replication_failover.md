@@ -9,11 +9,12 @@ tags: []
 
 ## 逻辑复制故障转移
 
-#### 测试环境
 
  - 主库 10.10.2.11
  - 物理从库 10.10.2.12
  - 逻辑从库 10.10.2.13
+
+![logical_replication_failover](/images/logical_replication_failover.excalidraw.png)
 
 #### 测试任务
  当主库发生故障，物理复制从库变为新主库。逻辑从库将订阅地址变更为新主库。
