@@ -2,7 +2,7 @@
 title: "pg_rewind 时间线对齐"
 date: 2019-01-30T10:16:17+08:00
 categories: ["postgres"]
-#toc: true
+toc: true
 draft: false
 ---
 pg_rewind requires that the target server either has the wal_log_hints option enabled in postgresql.conf or data checksums enabled when the cluster was initialized with initdb. Neither of these are currently on by default. full_page_writes must also be set to on, but is enabled by default.
@@ -97,12 +97,17 @@ standby_mode = 'on'
 primary_conninfo = 'user=postgres passfile=''/root/.pgpass'' host=10.1.88.72 port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres target_session_attrs=any'
 ```
 
-注意事项: host 指向新主库地址
+#### 注意事项: 
 
-以上过程中保持数据库是关闭状态!!!!
+host 指向新主库地址
+
+以上过程中保持数据库是关闭状态!!!! ， 如果出现数据库以主库的形式运行的情况，pg_stat_replication 中的 flush_lsn , replay_lsn 不在更新。及主从数据不更新。 只能重新拉取。 
+
+pg_rewind 会将 recovery.conf 会被 recovery.done。复制过程会，如果主库有的recovery.done文件，则会复制到备库并覆盖文件。此时重新修改recovery.done并重命名为recovery.conf
+
+谨记，在启动数据前仔细检测 recovery.conf 文件。确保数据库以从库形式运行。
 
 4 启动数据库，并验证
-
 
 ## 备注
 
