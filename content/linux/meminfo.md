@@ -163,3 +163,7 @@ Swap:          4095          40        4055
 内存溢出问题
 
 https://www.oracle.com/technical-resources/articles/it-infrastructure/dev-oom-killer.html
+
+更多关于linux 系统内存问题定位方法
+
+https://cloud.tencent.com/developer/article/2168100
