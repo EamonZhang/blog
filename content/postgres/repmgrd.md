@@ -4,11 +4,11 @@ date: 2023-03-24T16:20:16+08:00
 draft: false
 categories: ["postgres"]
 toc : true 
-
 ---
-# repmgrd介绍
 
-v 5.2
+## repmgrd介绍
+
+version 5.2
 
 repmgrd 作为运行在集群中每个节点上的一个管理和监控的守护程序，可以自动进行故障转移和维护复制关系，并提供有关每个节点状态的监控信息。
 
@@ -23,9 +23,9 @@ repmgrd 不依赖其他服务
 - 多种验证Postgresql存活状态方法（PostgreSQL ping, query execution or new connection）
 - 保留监控数据（可选）
 
-# repmgrd 故障转移
+## repmgrd 故障转移
 
-## 见证节点介绍
+### 见证节点介绍
 
 是一个独立于当前主从复制数据库的Postgresql数据库。
 
@@ -43,7 +43,7 @@ repmgrd 不依赖其他服务
 
 见证节点只在repmgrd启用时有效。
 
-## 添加见证节点
+### 添加见证节点
 
 安装一个独立的Postgresql实例，配置参考普通的repmgr。
 
@@ -55,7 +55,7 @@ repmgr -f /etc/repmgr.conf witness register -h node1
 
 思考: 见证节点是否需要运行repmgrd。 见证节点不同于其他从节点，元数据可以通过流复制直接获取到。需要repmgrd来维护。
 
-## 解决脑裂问题
+### 解决脑裂问题
 
 多数据中心带来的脑裂问题，当不同数据中心的节点彼此不可见时，从库的服务发生failover 产生一个新的主节点。此时整个集群同时拥有两个主服务。
 
@@ -68,7 +68,7 @@ repmgr4 提出location的概念，通过配置location来指定节点的物理�
 
 当发生failover时。repmgr首先检测是否存在与主服务位于同一个localtion的服务是可见的。如果不存（即整个与主服务位于同一个数据中心的节点都不可见）在则认为是网络问题。不提升新主库，并且进入降级模式。
 
-## 主服务可见性共识
+### 主服务可见性共识
 
 更复杂的集群结构，当从节点服务连接不到主服务时，询问其他从服务最后一次看到主服务的时间。当存在节点可以连接到主服务则证明主服务还存活，并且可以正常提供写服务。此时不发生新的选举。
 
@@ -80,7 +80,7 @@ repmgr4 提出location的概念，通过配置location来指定节点的物理�
 
 注意事项。必须每个服务都设置为true才生效
 
-## 从节点断开连接
+### 从节点断开连接
 
 当standby_disconnect_on_failover设置为true时，在发生故障转移时首先从节点断开本地的wal receiver,并且等待所有其他节点断开自己的wal receiver。
 
@@ -94,7 +94,7 @@ repmgr4 提出location的概念，通过配置location来指定节点的物理�
 - 注意设置此参数后将带来的延迟，包括确定自己wal receiver是否已经关闭。等他确认其他节点wal receiver 是否已经完全关闭
 -  开启此参数建议同时开启   `primary_visibility_consensus`
 
-## 故障转移验证
+### 故障转移验证
 
 在发生故障转移时，某个节点被选举为新的主节点时，可以通过配置自定义判断脚本，进一步决定当前是否可以被提升为主节点（用户可以自定义辅助逻辑）。  必须在所有节点进行配置。       
 
@@ -114,7 +114,7 @@ failover_validation_command=/path/to/script.sh %n
 
 根据脚本返回码（是否非0）决定是否可以将当前节点提升为主节点，如果不符合条件，中断本次故障转移流程，`election_rerun_interval` 秒后进入下一轮故障转移流程。
 
-## 级联复制
+### 级联复制
 
 Postgresql 9.2 数据库具有了级联复制功能。repmgr 可以提供级联复制支持。
 
@@ -122,7 +122,7 @@ Postgresql 9.2 数据库具有了级联复制功能。repmgr 可以提供级联�
 
 在上游节点发生故障时下游节点自动重新尝试连接原上游节点的父节点。
 
-## 主节点检测从库连接
+### 主节点检测从库连接
 
 以上的考虑情形大多是通过从节点检测主节点的运行情况来决定是否发生故障转移。在repmgr中主节点也可以检测到从节点的连接情况。
 
@@ -166,7 +166,7 @@ Postgresql 9.2 数据库具有了级联复制功能。repmgr 可以提供级联�
 repmgr cluster event --event=xxxxx (事件类型)
 ```
 
-# repmgrd 配置
+## repmgrd 配置
 
 Postgresql 配置 postgressql.conf  需要重启服务
 
@@ -184,13 +184,13 @@ shared_preload_libraries = 'repmgr'
 
 - degraded_monitoring_timeout 默认-1 禁止。默认情况下，repmgrd将无限期地继续处于降级监视模式。设置该参数超时（以秒为单位），之后repmgrd将终止。
 
-## 必须设置的参数
+### 必须设置的参数
 
 - `failover`      =automatic
 - `promote_command`   =/'usr/bin/repmgr standby promote -f /etc/repmgr.conf --log-to-file'
 - `follow_command`=  '/usr/bin/repmgr standby follow -f /etc/repmgr.conf --log-to-file --upstream-node-id=%n'
 
-## 可选参数
+### 可选参数
 
 ```
 priority
@@ -202,11 +202,11 @@ election_rerun_interval
 sibling_nodes_disconnect_timeout
 ```
 
-## 其他参数
+### 其他参数
 
 除了以上配置，conninfo 也会影响 repmgr 如何与 PostgreSQL 进行网络连接，如参数connect_timeout。同时也受到系统网络设置  `tcp_syn_retries`将影响。
 
-## 日志自动切割
+### 日志自动切割
 
 ```
   /var/log/repmgr/repmgrd.log {
@@ -222,9 +222,9 @@ sibling_nodes_disconnect_timeout
     }
 ```
 
-# repmgrd 操作
+## repmgrd 操作
 
-## repmgrd 维护模式
+### repmgrd 维护模式
 
 进入维护模式后，将不会发生自动故障转移。
 
@@ -247,7 +247,7 @@ repmgr -f /etc/repmgr.conf service status
 
 注意执行repmgr_standby_promote 将被拒绝，直到管理员wal resumed恢复回放。
 
-## 降级模式
+### 降级模式
 
  当遇到某些情况时将进入 "降级监控 "模式，即 repmgrd 仍处于活动状态，但在等待情况的解决。
 
@@ -262,13 +262,13 @@ repmgr -f /etc/repmgr.conf service status
 
 默认情况，降级模式将一致持续下去。但如果设置了degraded_monitoring_timeout参数，超过指定值，repmgrd将停止运行。
 
-## 监控数据存储
+### 监控数据存储
 
 当参数monitoring_history=true时，监控记录数据将会不断的写入到`repmgr.monitoring_history`表中。 可以使用命令`repmgr cluster cleanup -k/ --keep-history` (选择需要保留记录天数) 定期清理数据。
 
 这些数据也会复制到从节点中，可以通过设置` ALTER TABLE repmgr.monitoring_history SET UNLOGGED;` 使数据不复制到从节点。
 
-# 选举流程简介
+## 选举流程简介
 
 源码位置 `repmgrd-physical.c`
 
@@ -859,7 +859,7 @@ do_election(NodeInfoList *sibling_nodes, int *new_primary_id)
 	}
 ```
 
-## 总结:
+### 总结
 
 `选举结果状态`
 
@@ -886,11 +886,13 @@ ELECTION_RERUN
 
 Repmgr选举候选备节点会以以下顺序选举：LSN-> Priority-> Node_ID。
 
-## 流程图![](images/repmgrd.png)
+## 流程图
 
-# 功能增强
+ ![](/images/repmgrd.png)
 
-如何将repmgrd真正投入到生产中，真正的落地。在某些CASE面向仍能满足HA要求
+## 功能增强
+
+如何将repmgrd真正投入到生产中，真正的落地。面对某些CASES时仍能满足HA要求
 
 ### **Virtual IP**
 
@@ -957,7 +959,7 @@ Repmgr选举候选备节点会以以下顺序选举：LSN-> Priority-> Node_ID�
 
 - 在Postgresql对外提供服务时进行健康状态检测。如果不满足需求，停止对应用提供服务，待恢复后在提供服务
 
-# 故障切换时间预估
+## 故障切换时间预估
 
 switchover & failover: 故障发生后检测切换的总时间预估
 
