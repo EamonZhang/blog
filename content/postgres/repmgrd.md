@@ -1,9 +1,11 @@
+---
 title: "repmgrd介绍"
 date: 2023-03-24T16:20:16+08:00
 draft: false
 categories: ["postgres"]
 toc : true 
 
+---
 # repmgrd介绍
 
 v 5.2
