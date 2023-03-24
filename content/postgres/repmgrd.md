@@ -1,4 +1,12 @@
+title: "repmgrd介绍"
+date: 2023-03-24T16:20:16+08:00
+draft: false
+categories: ["postgres"]
+toc : true 
+
 # repmgrd介绍
+
+v 5.2
 
 repmgrd 作为运行在集群中每个节点上的一个管理和监控的守护程序，可以自动进行故障转移和维护复制关系，并提供有关每个节点状态的监控信息。
 
@@ -25,6 +33,8 @@ repmgrd 不依赖其他服务
 
 位于两个数据中心的主从复制结构。和主服务同一个数据中心上创建一个见证服务。当主服务不可用时，从节点判断逻辑，如果主服务和见证节点都不可见则认为是网络问题。如果主服务不可见，见证节点可见则认为是主服务发生问题。
 
+注意事项:
+
 不要将见证节点与主从服务安装在同一个物理机上。
 
 多数据中心场景建议使用localiton来预防脑裂问题
@@ -41,23 +51,24 @@ repmgrd 不依赖其他服务
 repmgr -f /etc/repmgr.conf witness register -h node1
 ```
 
+思考: 见证节点是否需要运行repmgrd。 见证节点不同于其他从节点，元数据可以通过流复制直接获取到。需要repmgrd来维护。
+
 ## 解决脑裂问题
 
-多数据中心带来的脑裂问题，当不同数据中心的节点不可见时，从库的服务发生failover 产生也新的主节点。此时整个集群同时拥有两个主服务。
+多数据中心带来的脑裂问题，当不同数据中心的节点彼此不可见时，从库的服务发生failover 产生一个新的主节点。此时整个集群同时拥有两个主服务。
 
 虽然见证服务可以在仲裁。但是见证服务存在如下弊端。
 
 - 需要保证见证节点与主服务节点位于同一个数据中心。
-- 当集群中多数节点与主服务节点不在同一个数据中心事
-- 增加额外的维护成本，且不便扩展，尤其是大规模应用时。
+- 当集群中多数节点与主服务节点不在同一个数据中心时，增加额外的维护成本，且不便扩展，尤其是大规模应用时。
 
 repmgr4 提出location的概念，通过配置location来指定节点的物理位置。
 
-当发生failover时。repmgr首先检测是否存在与主服务位于同一个localtion的服务是可见的。如果不存（即整个与主服务位于同一个数据中心的节点都不可见）在则认为是网络问题。不提升新主库，并且集群进入降级模式。
+当发生failover时。repmgr首先检测是否存在与主服务位于同一个localtion的服务是可见的。如果不存（即整个与主服务位于同一个数据中心的节点都不可见）在则认为是网络问题。不提升新主库，并且进入降级模式。
 
 ## 主服务可见性共识
 
-更复杂的集群结构，当从节点服务连接不到主服务时，询问其他从服务最后一次看到主服务的时间。当有节点可以连接到主服务证明主服务还存活，并且可以正常提供写服务。此时不发生新的选举。
+更复杂的集群结构，当从节点服务连接不到主服务时，询问其他从服务最后一次看到主服务的时间。当存在节点可以连接到主服务则证明主服务还存活，并且可以正常提供写服务。此时不发生新的选举。
 
 配置参数
 
@@ -83,7 +94,7 @@ repmgr4 提出location的概念，通过配置location来指定节点的物理�
 
 ## 故障转移验证
 
-在发生故障转移时，某个节点被选举为新的主节点时，可以通过配置自定义判断脚本，进一步决定当前是否可以被提升为主节点。  必须在所有节点进行配置。       
+在发生故障转移时，某个节点被选举为新的主节点时，可以通过配置自定义判断脚本，进一步决定当前是否可以被提升为主节点（用户可以自定义辅助逻辑）。  必须在所有节点进行配置。       
 
 配置如下：
 
@@ -105,15 +116,15 @@ failover_validation_command=/path/to/script.sh %n
 
 Postgresql 9.2 数据库具有了级联复制功能。repmgr 可以提供级联复制支持。
 
-当发生故障转移时，repmgr保持级联关系不便。
+当发生故障转移时，repmgr保持级联关系不变。
 
 在上游节点发生故障时下游节点自动重新尝试连接原上游节点的父节点。
 
 ## 主节点检测从库连接
 
-以上的考虑情形大多是通过从节点观测主节点的运行情况来决定是否发生故障转移。在repmgr中主节点也可以观测到从节点的连接情况。
+以上的考虑情形大多是通过从节点检测主节点的运行情况来决定是否发生故障转移。在repmgr中主节点也可以检测到从节点的连接情况。
 
-通过主机点不断的检测从节点的连接情况，当满足某些状况时可以执行自定义脚本。如发生故障转移后产生一个新的主服务时，其他的从节点也都跟着指向了新主节点，元主节点的从节点个数变为零。这时可以通过执行一个特殊的命令来阻止应用写入旧的主节点。
+通过主机点不断的检测从节点的连接情况，当满足某些状况时可以执行自定义脚本。如发生故障转移后产生一个新的主服务时，其他的从节点也都跟着指向了新主节点，原主节点的从节点个数变为零。这时可以通过执行一个特殊的命令来阻止应用写入原主节点。
 
 ### 检测过程和标准
 
@@ -161,22 +172,20 @@ Postgresql 配置 postgressql.conf  需要重启服务
 shared_preload_libraries = 'repmgr'
 ```
 
- monitor_interval_secs 检测上游节点时间间隔 默认2秒
+- monitor_interval_secs 检测上游节点时间间隔 默认2秒
 
-connection_check_type 检测类型 PQping (default)、connection、query
+- connection_check_type 检测类型 PQping (default)、connection、query
 
-reconnect_attempts 重连尝试次数 默认6次
+- reconnect_attempts 重连尝试次数 默认6次
 
-reconnect_interval 重连尝试间隔时间
+- reconnect_interval 重连尝试间隔时间
 
-degraded_monitoring_timeout 默认-1 禁止。默认情况下，repmgrd将无限期地继续处于降级监视模式。设置该参数超时（以秒为单位），之后repmgrd将终止。
-
-
+- degraded_monitoring_timeout 默认-1 禁止。默认情况下，repmgrd将无限期地继续处于降级监视模式。设置该参数超时（以秒为单位），之后repmgrd将终止。
 
 ## 必须设置的参数
 
-- `failover` =automatic
-- `promote_command`='/usr/bin/repmgr standby promote -f /etc/repmgr.conf --log-to-file'
+- `failover`      =automatic
+- `promote_command`   =/'usr/bin/repmgr standby promote -f /etc/repmgr.conf --log-to-file'
 - `follow_command`=  '/usr/bin/repmgr standby follow -f /etc/repmgr.conf --log-to-file --upstream-node-id=%n'
 
 ## 可选参数
@@ -194,8 +203,6 @@ sibling_nodes_disconnect_timeout
 ## 其他参数
 
 除了以上配置，conninfo 也会影响 repmgr 如何与 PostgreSQL 进行网络连接，如参数connect_timeout。同时也受到系统网络设置  `tcp_syn_retries`将影响。
-
-
 
 ## 日志自动切割
 
@@ -257,7 +264,7 @@ repmgr -f /etc/repmgr.conf service status
 
 当参数monitoring_history=true时，监控记录数据将会不断的写入到`repmgr.monitoring_history`表中。 可以使用命令`repmgr cluster cleanup -k/ --keep-history` (选择需要保留记录天数) 定期清理数据。
 
-这些数据也会复制到从节点中，可以通过设置` ALTER TABLE repmgr.monitoring_history SET UNLOGGED;` 使数据不复制从节点。
+这些数据也会复制到从节点中，可以通过设置` ALTER TABLE repmgr.monitoring_history SET UNLOGGED;` 使数据不复制到从节点。
 
 # 选举流程简介
 
@@ -852,6 +859,8 @@ do_election(NodeInfoList *sibling_nodes, int *new_primary_id)
 
 ## 总结:
 
+`选举结果状态`
+
 ```
 ELECTION_NOT_CANDIDAT
 ELECTION_WON
@@ -875,9 +884,11 @@ ELECTION_RERUN
 
 Repmgr选举候选备节点会以以下顺序选举：LSN-> Priority-> Node_ID。
 
-## 流程图![](/run/user/1000/doc/8bb85d50/repmgrd自动选举流程.png)
+## 流程图![](images/repmgrd.png)
 
 # 功能增强
+
+如何将repmgrd真正投入到生产中，真正的落地。在某些CASE面向仍能满足HA要求
 
 ### **Virtual IP**
 
@@ -944,3 +955,16 @@ Repmgr选举候选备节点会以以下顺序选举：LSN-> Priority-> Node_ID�
 
 - 在Postgresql对外提供服务时进行健康状态检测。如果不满足需求，停止对应用提供服务，待恢复后在提供服务
 
+# 故障切换时间预估
+
+switchover & failover: 故障发生后检测切换的总时间预估
+
+主要参考因素:
+
+- monitor_interval_secs 检测上游节点时间间隔 默认2秒
+
+- connection_check_type 检测类型 每次检测的timeout
+
+- reconnect_attempts 重连尝试次数 默认6次
+
+- reconnect_interval 重连尝试间隔时间
