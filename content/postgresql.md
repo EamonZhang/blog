@@ -103,6 +103,7 @@ toc: true
 - [PG高可用Patroni搭建](/postgres/patroni)
 - [PG高可用Patroni管理进阶](/postgres/patroni02)
 - [PG高可用Repmgr搭建](/postgres/repmgr)
+- [PG高可用Repmgrd内幕](/postgres/repmgrd)
 - [来自citus的高可用方案 pg_auto_failover ](/postgres/pgautofailover)
 
 ## 索引
@@ -165,3 +166,5 @@ wal_keep_size = wal_keep_segments * wal_segment_size(16MB)
 ## 书籍
 
 [The Internals of PostgreSQL](http://www.interdb.jp/pg/index.html)
+
+https://github.com/dhamaniasad/awesome-postgres
