@@ -972,3 +972,27 @@ switchover & failover: 故障发生后检测切换的总时间预估
 - reconnect_attempts 重连尝试次数 默认6次
 
 - reconnect_interval 重连尝试间隔时间
+
+## 只有两个节点
+
+主要面临问题: 两个节点主要是当发生网络故障时，而非postgres数据库应用问题时。从库无法判断是网络还是主库发生了故障。见证节点主要是为了解决这样的问题。
+
+解决思路: 模拟见证节点。在从库无法与主库通信时，ping 一个其他节点。或ping 网关或自己的ip。 当ping失败时认为发生了网络问题。
+
+具体实现: 配置 `failover_validation_command`
+
+​	failover_validation_command.sh
+
+```
+#! bin/bash
+ping -c 5 {{ inventory_hostname }}
+if [ $? -eq 0 ]; then
+	echo "ping $ip  success!"
+	return 0
+else
+	echo "ping  $ip fail!"
+	return 1
+fi
+```
+
+
