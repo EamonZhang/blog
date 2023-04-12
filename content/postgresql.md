@@ -102,6 +102,7 @@ toc: true
 - [PG主从切换 pg_rewind](/postgres/pg_rewind)
 - [PG高可用Patroni搭建](/postgres/patroni)
 - [PG高可用Patroni管理进阶](/postgres/patroni02)
+- [PG高可用Patroni 内幕](https://www.postgresql.eu/events/pgconfeu2019/sessions/session/2717/slides/218/Patroni%20in%202019_%20What's%20New%20and%20Future%20Plans.pdf)
 - [PG高可用Repmgr搭建](/postgres/repmgr)
 - [PG高可用Repmgrd内幕](/postgres/repmgrd)
 - [来自citus的高可用方案 pg_auto_failover ](/postgres/pgautofailover)
