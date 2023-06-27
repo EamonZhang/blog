@@ -146,3 +146,13 @@ https://github.com/digoal/blog/blob/master/201901/20190128_02.md
 5 当启动旧主库后，自动重放wal日志即可完成数据的同步
 
 参加官方文档 https://www.postgresql.org/docs/14/app-pgrewind.html
+
+## 创建rewind 用户
+
+```
+CREATE USER {{ REWIND_USER }} ENCRYPTED PASSWORD '{{ REWIND_PASSWORD }}';
+GRANT EXECUTE ON function pg_catalog.pg_ls_dir(text, boolean, boolean) TO {{ REWIND_USER }};
+GRANT EXECUTE ON function pg_catalog.pg_stat_file(text, boolean) TO {{ REWIND_USER }};
+GRANT EXECUTE ON function pg_catalog.pg_read_binary_file(text) TO {{ REWIND_USER }};
+GRANT EXECUTE ON function pg_catalog.pg_read_binary_file(text, bigint, bigint, boolean) TO {{ REWIND_USER }};
+```
