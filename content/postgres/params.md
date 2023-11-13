@@ -10,7 +10,7 @@ tags: [""]
 
 ##  性能参数
 
-[pgtune](https://github.com/le0pard/pgtune) [pgconfig](https://www.pgconfig.org/)  
+[pgtune](https://github.com/le0pard/pgtune) [pgconfig](https://www.pgconfig.org/) [cybertec](http://pgconfigurator.cybertec.at/) 
 
 ##  [日志参数](postgres/log/)  
 

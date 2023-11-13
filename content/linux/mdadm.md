@@ -184,3 +184,38 @@ active
 ```
 mdadm --readwrite /dev/md127 
 ```
+
+#### 更换硬盘遇到问题
+新硬盘更换后组raid出现如下问题
+
+```
+#mdadm /dev/md127 -a /dev/sdc
+mdadm: Cannot open /dev/sdc: Device or resource busy
+```
+
+解决
+
+```
+cat /proc/mdstat
+Personalities : [raid10]
+md126 : inactive sdc[3](S)
+      499976536 blocks super 1.2
+
+md127 : active raid10 sdb[0] sda[3] sdd[2]
+      999950336 blocks super 1.2 512K chunks 2 near-copies [4/3] [U_UU]
+      bitmap: 8/8 pages [32KB], 65536KB chunk
+```
+
+一 停掉 md126
+
+```
+#mdadm -S /dev/md126
+mdadm: stopped /dev/md126
+```
+
+二 重新组raid
+
+```
+#mdadm /dev/md127 -a /dev/sdc
+mdadm: added /dev/sdc
+```

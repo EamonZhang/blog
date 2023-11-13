@@ -2,13 +2,16 @@
 title: "Nginx 状态监控"
 date: 2020-04-20T11:12:28+08:00
 draft: false
+toc: false 
+categories: ["nginx"]
+tags: []
 ---
 
-#### Nginx 开启status用以监控状态信息
+## Nginx 开启status用以监控状态信息
 
 Nginx 可以通过with-http_stub_status_module模块来监控nginx的一些状态信息。
 
-##### 通过nginx -V来查看是否有with-http_stub_status_module该模块。
+#### 通过nginx -V来查看是否有with-http_stub_status_module该模块。
 
 ```
 # nginx -V
@@ -21,7 +24,7 @@ configure arguments: --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --mod
 
 ```
 
-##### 修改nginx.conf 
+#### 修改nginx.conf 
 
 ```
 # 加入如下代码
@@ -46,7 +49,7 @@ configure arguments: --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --mod
 
 ```
 
-##### 重新启动nginx，并访问http://localhost/ngx_status。
+#### 重新启动nginx，并访问http://localhost/ngx_status。
 
 ```
 Active connections: 1 

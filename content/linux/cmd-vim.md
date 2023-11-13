@@ -1,16 +1,19 @@
 ---
-title: "vi 编辑"
+title: "vim 编辑"
 date: 2019-10-22T10:01:42+08:00
 draft: false
+toc: true
+categories: ['linux']
+tags: []
 ---
 
-#### 字符串查找
+## 字符串查找
 
 a.查找一个字符串使用：“/你要查询的内容”
 
 b.查找下一个 ：“/你要查询的内容” 再输入”n“跳到下一个
 
-#### 字符串替换
+## 字符串替换
 
 a. 文件内全部替换：
 
@@ -30,3 +33,12 @@ b. 文件内局部替换：
 
 :%s#linuxidc.com#linuxidc.net#gc
 
+
+## 跳到指定行
+
+第一行 gg
+之后一行 shift+g
+
+第n行 ngg
+
+显示当前光标所在行 ctrl+g

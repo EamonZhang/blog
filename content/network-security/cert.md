@@ -180,4 +180,6 @@ openssl x509 -in ca.pem -text -noout
 openssl x509 -in server.pem -text -noout  
 openssl x509 -in client.pem -text -noout 
 
-[参见](https://coreos.com/os/docs/latest/generate-self-signed-certificates.html) 
+[参见](https://coreos.com/os/docs/latest/generate-self-signed-certificates.html)
+
+原文 https://github.com/coreos/docs/blob/master/os/generate-self-signed-certificates.md 

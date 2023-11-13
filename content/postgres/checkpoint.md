@@ -22,8 +22,8 @@ categories: ["postgres"]
 
 | 位置   | 是否同步  | 方式 | 负责进程|
 |  ----  | ----  | ---- | ---- |
-| WAL  | 同步 | 顺序写| backgroudwriter |
-| TableFile  | 异步 | 随机读写 | walwriter |
+| WAL  | 同步 | 顺序写| walwriter |
+| TableFile  | 异步 | 随机读写 |  backgroudwriter |
 
 即保障了数据的完整性又同时兼顾的性能。
 

@@ -84,9 +84,52 @@ cat /etc/coredns/Corefile
 
 ```
 
-#### 更多
+#### 将服务注册在etcd中
 
-将服务注册在etcd中
+```
+zhangeamon.top. {
+    errors
+    health {
+       lameduck 5s
+    }
+    etcd {
+        stubzones
+        path /skydns
+        endpoint http://localhost:2379
+        upstream . 8.8.8.8:53 8.8.4.4:53 /etc/resolv.conf
+        fallthrough
+    }
+    prometheus :9153
+    cache 30
+    reload
+    loadbalance
+    log
+}
+
+. {
+    cache
+    loadbalance   # 负载均衡，开启DNS记录轮询策略
+    forward . 8.8.8.8:53 8.8.4.4:53 /etc/resolv.conf  # 上面etcd未查询到的请求转发给设置的DNS服务器解析
+    log # 打印日志
+}
+
+```
+
+添加记录
+
+```
+export ETCDCTL_API=3
+etcdctl put /skydns/top/zhangeamon/www/x1 '{"host":"1.1.1.1","ttl":10}'
+etcdctl put /skydns/top/zhangeamon/www/x2 '{"host":"1.1.1.2","ttl":10}'
+```
+
+测试
+
+```
+dig +short  www.zhangeamon.top @localhost
+1.1.1.1
+1.1.1.2
+```
 
 #### 遗留
 

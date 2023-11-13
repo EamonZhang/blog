@@ -2,6 +2,8 @@
 title: "vagrant"
 date: 2020-07-13T09:32:49+08:00
 draft: false
+categories: ["kvm"]
+toc : true
 ---
 
 ## 介绍
@@ -16,9 +18,9 @@ draft: false
 
 ```
 -- 安装依赖
-#yum --enablerepo=epel -y install fuse-sshfs
-#yum install bsdtar
-#yum -y install gcc kernel kernel-devel
+yum --enablerepo=epel -y install fuse-sshfs
+yum install bsdtar
+yum -y install gcc kernel kernel-devel
 ```
 
 ## 常用方法
@@ -171,7 +173,79 @@ Vagrant.configure("2") do |config|
             end
         end
     config.vm.provision "shell", inline: <<-SHELL
-      #yum update -y
+      # 可以root用户 登录 密码：vagrant
+      sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
+      sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+      systemctl restart sshd
+
     SHELL
 end
+```
+
+##  镜像管理
+
+
+#### 查看现有虚拟机信息
+```
+vboxmanage list vms
+"centos-7-1-1.x86_64_1644905216545_42674" {d21b3936-af34-4384-a661-a42b808335e1}
+"kvm_node0_1644905231518_15885" {5bb1e4a9-8a38-4ef8-a763-cd14cebf7463}
+"kvm_node1_1644906746126_25397" {ef45e4a8-24d5-437d-a09e-d2931bdf38f6}
+"kvm_node2_1644908326313_91281" {baf4644f-d1e0-4aa0-a789-0d0a1ea2ad99}
+"kvm_node3_1644908463101_26319" {5958eb7d-feed-432b-839a-e46945de6f17}
+```
+#### 查看虚拟机详细信息
+```
+vboxmanage showvminfo 5bb1e4a9-8a38-4ef8-a763-cd14cebf7463
+```
+
+#### 虚拟机打包成镜像
+```
+vagrant package --base kvm_node3_1644908463101_26319 --output basekvm.box
+````
+
+#### 载入镜像
+```
+vagrant box add ./base_kvm.box  --name new_node
+```
+
+#### 查看镜像载入情况
+```
+vagrant box list
+```
+
+## 快照管理
+
+```
+生成快照
+vagrant snapshot save node0 v.1.1
+
+查看快照
+vagrant snapshot list node0 
+
+删除快照
+vagrant snapshot delete node0 v.1.1
+
+恢复快照
+vagrant snapshot restore node0 v.1.1
+```
+
+## 遇见错误
+
+
+#### ubuntu 20.04 指定 private_network 时
+```
+here was an error while executing `VBoxManage`, a CLI used by Vagrant
+for controlling VirtualBox. The command and stderr is shown below.
+
+Command: ["hostonlyif", "ipconfig", "vboxnet4", "--ip", "10.0.2.1", "--netmask", "255.255.255.0"]
+
+Stderr: VBoxManage: error: Code E_ACCESSDENIED (0x80070005) - Access denied (extended info not available)
+VBoxManage: error: Context: "EnableStaticIPConfig(Bstr(pszIp).raw(), Bstr(pszNetmask).raw())" at line 242 of file VBoxManageHostonly.cpp
+
+```
+
+解决  sudo vim /etc/vbox/networks.conf
+```
+* 0.0.0.0/0
 ```

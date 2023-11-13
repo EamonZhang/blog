@@ -2,18 +2,21 @@
 title: "pmap Linux 进程内存分析"
 date: 2019-03-19T08:58:40+08:00
 draft: false
+toc: false
+categories: ["linux"]
+tags: [""]
 ---
 
-##### 介绍
+## 介绍
 
  pmap - report memory map of a process(查看进程的内存映像信息)
 
-##### 参数说明
+#### 参数说明
 
-- - x extended       Show the extended format. 显示扩展格式  
-- - d device         Show the deviceformat.   显示设备格式 
+- x extended       Show the extended format. 显示扩展格式  
+- d device         Show the deviceformat.   显示设备格式 
 
-##### 结果查看说明
+#### 结果查看说明
 
 - Address:  start address ofmap  映像起始地址
         
@@ -31,7 +34,7 @@ draft: false
 
 - Device:  device name(major:minor)  设备名
 
-##### 举例说明
+#### 举例说明
 
 查看进程号为1 的进程
 
@@ -149,7 +152,7 @@ mapped: 191116K    writeable/private: 18176K    shared: 0K
 
 - shared 表示进程和其他进程共享的内存大小
 
-##### 实际应用
+#### 实际应用
 
 每隔两秒查看进程号 21215 的状态
 

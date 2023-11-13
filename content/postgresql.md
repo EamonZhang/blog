@@ -32,14 +32,17 @@ toc: true
 - [高级SQL](/postgres/high_level_sql)
 - [数据库 OOM 预防](/postgres/oom)
 - [跨库操作](/postgres/pg_fdw)
-- [auto vacuum 触发机制](/postgres/auto_vacuum_trigger)
+- [autovacuum 触发机制](/postgres/auto_vacuum_trigger)
+- [autovacuum限流](/postgres/vacuum_limit)
 - [unlogged table](/postgres/unlogged_table)
+- [物化视图](/postgres/materialized)
+- [数据类型 json](/postgres/pg_json)
 
 ## 安装维护
 
 - [安装 Postgres](/postgres/install01)
 - [主从流复制](/postgres/replication01)
-- [Logical Replication 逻辑复制](/logical-replication)
+- [逻辑复制](/postgres/logical-replication)
 - [数据库参数](/postgres/params)
 - [指标查看&stat统计信息](/postgres/stat)
 - [拓展插件](/postgres/extention)
@@ -51,6 +54,11 @@ toc: true
 - [数据预加载](/postgres/pg_prewarm)
 - [kylin系统postgresql编译安装](/postgres/compile_kylin)
 
+## 访问数据库
+
+- [psql](https://psql-tips.org/psql_tips_all.html)
+- [pgweb](https://github.com/sosedoff/pgweb)
+
 ## 管理
 
 - [pg_pathman 分区表](/postgres/pg_pathman)
@@ -60,7 +68,7 @@ toc: true
 - [应用实战](/postgres/awsome-postgres)
 - [创建只读用户](/postgres/readonly)
 - [找回supper user 权限](/postgres/reback_supper_user)
-- [分区表](/postgres/partition)
+- [原生分区表](/postgres/partition)
 
 ## 常用视图
 
@@ -85,6 +93,7 @@ toc: true
 - [使用PG_RMAN管理备份恢复](/postgres/pg_rman)
 - [wal-g 应用](/postgres/wal-g)
 - 使用pgbakrest备份恢复
+- [备份恢复工具总汇](https://wiki.postgresql.org/wiki/Binary_Replication_Tools)
 
 ## 高可用
 
@@ -93,7 +102,10 @@ toc: true
 - [PG主从切换 pg_rewind](/postgres/pg_rewind)
 - [PG高可用Patroni搭建](/postgres/patroni)
 - [PG高可用Patroni管理进阶](/postgres/patroni02)
+- [PG高可用Patroni 内幕](https://www.postgresql.eu/events/pgconfeu2019/sessions/session/2717/slides/218/Patroni%20in%202019_%20What's%20New%20and%20Future%20Plans.pdf)
 - [PG高可用Repmgr搭建](/postgres/repmgr)
+- [PG高可用Repmgrd内幕](/postgres/repmgrd)
+- [来自citus的高可用方案 pg_auto_failover ](/postgres/pgautofailover)
 
 ## 索引
 
@@ -123,10 +135,11 @@ toc: true
 - [监控工具](/postgres/monitor)
 - [pgwatch2 数据库指标监控查看](/postgres/pgwatch2)
 - [数据库监控指标](/postgres/monitor_explain)
+- [查看数据信息常用sql整理](/postgres/monitor-sql)
 
 ## 日志系统
  
-- ELK
+- [ELK](/postgres/pg_elk)
 
 ## 分布式
 
@@ -137,4 +150,22 @@ toc: true
 
 - [数据库 ssl认证](/postgres/ssl)
 
+## 新版本特性
 
+- [PostgreSQL 10 新特性汇总](https://postgres.fun/20170710155008.html)
+- [PostgreSQL 11 新特性汇总](https://postgres.fun/20181102084300.html)
+- [PostgreSQL 12 新特性汇总](https://postgres.fun/20190809161300.html)
+- [PostgreSQL 13 新特性汇总](https://postgres.fun/20200724165800.html)
+
+postgres 13
+```
+wal_keep_segments 已经取消，改用 wal_keep_size
+
+wal_keep_size = wal_keep_segments * wal_segment_size(16MB) 
+```
+
+## 书籍
+
+[The Internals of PostgreSQL](http://www.interdb.jp/pg/index.html)
+
+https://github.com/dhamaniasad/awesome-postgres

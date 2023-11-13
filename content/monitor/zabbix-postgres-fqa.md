@@ -89,3 +89,6 @@ zabbix_get -s 10.1.88.74 -k proc.num[postmaster]
 当前postgers version 10.4 出现如上问题,10.6 没有
 
 
+#### 新版Zabbix 监控postgres
+
+https://git.zabbix.com/projects/ZBX/repos/zabbix/browse/templates/db/postgresql?at=refs%2Fheads%2Frelease%2F6.0

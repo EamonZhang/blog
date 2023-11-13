@@ -1,8 +1,8 @@
 ---
-title: "PG主从切换 pg_rewind"
+title: "pg_rewind 时间线对齐"
 date: 2019-01-30T10:16:17+08:00
 categories: ["postgres"]
-#toc: true
+toc: true
 draft: false
 ---
 pg_rewind requires that the target server either has the wal_log_hints option enabled in postgresql.conf or data checksums enabled when the cluster was initialized with initdb. Neither of these are currently on by default. full_page_writes must also be set to on, but is enabled by default.
@@ -44,6 +44,8 @@ pg_rewind登场 告别一下回到解放前。
 - 必须开启full_page_writes 默认开启
 - 必须开启wal_log_hints 修改后需要重启 或者data block checksum 数据库初始化时设置
 
+如果在初始化的时候没有开启checksum ,在version 12 及以后的版本中可以使用 [pg_checksum](https://www.modb.pro/db/103607) 重新设置  
+
 1 将10.1.88.72从库变成主库
 
 ```
@@ -79,7 +81,7 @@ sudo su - postgres
 # 测试 -n
 /usr/pgsql-10/bin/pg_rewind -n -D /var/lib/pgsql/10/data/ --source-server="hostaddr=10.1.88.72 user=postgres port=5432"
 # 正式执行
-/usr/pgsql-10/bin/pg_rewind -D /var/lib/pgsql/10/data/ --source-server="hostaddr=10.1.88.72 user=postgres port=5432"
+/usr/pgsql-10/bin/pg_rewind -D /var/lib/pgsql/10/data/ --source-server="hostaddr=10.1.88.72 user=postgres port=5432" -P
 ```
 
 c 修改 recovery.conf
@@ -95,12 +97,17 @@ standby_mode = 'on'
 primary_conninfo = 'user=postgres passfile=''/root/.pgpass'' host=10.1.88.72 port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres target_session_attrs=any'
 ```
 
-注意事项: host 指向新主库地址
+#### 注意事项: 
 
-以上过程中保持数据库是关闭状态!!!!
+host 指向新主库地址
+
+以上过程中保持数据库是关闭状态!!!! ， 如果出现数据库以主库的形式运行的情况，pg_stat_replication 中的 flush_lsn , replay_lsn 不在更新。及主从数据不更新。 只能重新拉取。 
+
+pg_rewind 会将 recovery.conf 会被 recovery.done。复制过程会，如果主库有的recovery.done文件，则会复制到备库并覆盖文件。此时重新修改recovery.done并重命名为recovery.conf
+
+谨记，在启动数据前仔细检测 recovery.conf 文件。确保数据库以从库形式运行。
 
 4 启动数据库，并验证
-
 
 ## 备注
 
@@ -119,3 +126,33 @@ primary_conninfo = 'user=postgres passfile=''/root/.pgpass'' host=10.1.88.72 por
 ## 更多
 
 https://github.com/digoal/blog/blob/master/201901/20190128_02.md
+
+## 应用
+
+典型应用场景，在发生故障转移后，原主库重新加入集群中。
+
+## 原理
+
+基本思想是将所有文件系统级的变化从源集群复制到目标集群。
+
+1 连接到源端数据库，可以对比找到本地数据库分叉点之前最后一次checkpoint的在wal日志中位置，解析分叉点后的WAL，记录这些事务修改了哪些数据块
+
+2 对于数据文件，只从新主拉取被旧主修改了的数据块，并覆盖旧主数据文件中对应的数据块
+
+3 拷贝WAL segments, `pg_xact`,  及配置文件， 忽略 `pg_dynshmem/`, `pg_notify/`, `pg_replslot/`, `pg_serial/`, `pg_snapshots/`, `pg_stat_tmp/`, and `pg_subtrans/` 
+
+4 把旧主改成恢复模式，恢复的起点则设置为分叉点前的最近一次checkpoint
+
+5 当启动旧主库后，自动重放wal日志即可完成数据的同步
+
+参加官方文档 https://www.postgresql.org/docs/14/app-pgrewind.html
+
+## 创建rewind 用户
+
+```
+CREATE USER {{ REWIND_USER }} ENCRYPTED PASSWORD '{{ REWIND_PASSWORD }}';
+GRANT EXECUTE ON function pg_catalog.pg_ls_dir(text, boolean, boolean) TO {{ REWIND_USER }};
+GRANT EXECUTE ON function pg_catalog.pg_stat_file(text, boolean) TO {{ REWIND_USER }};
+GRANT EXECUTE ON function pg_catalog.pg_read_binary_file(text) TO {{ REWIND_USER }};
+GRANT EXECUTE ON function pg_catalog.pg_read_binary_file(text, bigint, bigint, boolean) TO {{ REWIND_USER }};
+```

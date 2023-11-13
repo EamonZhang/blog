@@ -2,6 +2,9 @@
 title: "二叉树、B-Tree、B+Tree、B*Tree"
 date: 2019-02-18T14:00:58+08:00
 draft: false
+toc: false
+categories: ["tidb"]
+tags: []
 ---
 
 - 二叉树：二叉树，每个结点只存储一个关键字，等于则命中，小于走左边，大于走右边；

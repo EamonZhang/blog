@@ -1,6 +1,8 @@
 ---
 title: "误操作闪回"
 date: 2021-01-11T17:19:06+08:00
+categories: ["postgres"]
+toc : true
 draft: false
 ---
 
@@ -221,5 +223,8 @@ postgres=# select xmin,xmax,* from reback_t ;
  26913049 | 26913056 | 21
 (9 行记录)
 ```
+####
+
+插件 pg_dirtyread
 
 封侯非我意，我愿海波平。

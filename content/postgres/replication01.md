@@ -264,8 +264,10 @@ primary_conninfo = 'application_name=standby02 user=postgres host=10.2.0.14 port
 主库查看结果
 ```
 psql -U postgres
-postgres=# select sync_state from pg_stat_replication ;
+postgres=# select sync_priority,sync_state from pg_stat_replication ;
 ```
+
+sync_priority,sync_priority 状态说明
 
 ## 从变主
 
@@ -362,3 +364,22 @@ pg_receivewal
 ```
 
 备份增量wal日志，并可压缩备份。结合wal-g 做数据备份
+
+## 主从延迟查看
+
+主库查看/字节大小
+
+```
+#数据延迟
+select pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)) as latency from pg_stat_replication ;
+
+#wal 不同阶段延迟
+select pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),sent_lsn)) as sent_latency, pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),write_lsn)) as write_latency ,pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),flush_lsn)) as flush_latency,pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),replay_lsn)) as replay_latency from pg_stat_replication ;
+
+```
+
+从库查看/时间
+
+```
+select now() - pg_last_xact_replay_timestamp();
+```

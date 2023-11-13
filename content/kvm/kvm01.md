@@ -2,11 +2,14 @@
 title: "KVM"
 date: 2018-11-06T16:23:07+08:00
 draft: false
+toc: true
+categories: []
+tags: []
 ---
-- 安装
+
+## 安装
  
 #### ubuntu14.04 
----
 
 .安装kvm
 
@@ -35,7 +38,6 @@ dns-nameservers 114.114.114.114
 virt-install --connect qemu:///system -n test01 -r 1024 -f /home/kvm/test01.qcow2 -s 20 -c /home/kvm/ubuntu-12.04.1-server-amd64.iso --vnc --noautoconsole --os-type linux --os-variant ubuntuPrecise --accelerate --network=bridge:br0 
 ```
 #### centos7 
----
 
 yum install qemu-kvm libvirt virt-install bridge-utils
 
@@ -89,9 +91,8 @@ virsh --connect qemu:///system
 
 设置开机自启动 virsh autostart server01
 
-- 克隆
- 
----   
+## 克隆
+    
 ```
 virt-clone --connect=qemu:///system -o server-02 -n server-clone -f /var/lib/libvirt/images/server-clone.img
 ```
@@ -112,7 +113,7 @@ cat /etc/libvirt/qemu/server-02.xml | grep "mac"
 
 在 vi /etc/sysconfig/network-scripts/ifcfg-eth0 中修改相应的mac 
 
-- 修改磁盘大小 
+##  修改磁盘大小 
 
 ---  
 qemu-img resize [-q] filename [+ | -]size 
@@ -176,22 +177,29 @@ I/O 大小(最小/最佳)：512 字节 / 512 字节
 
 磁盘空间变大
 
-- 扩容分区 
-
---- 
-1 fdisk 修改分区表　，　删除最后一个分区，新建分区，保持退出
+6.扩容分区 
+ 
+fdisk 修改分区表，删除最后一个分区，新建分区，保持退出
+```
 echo d; echo n; echo ; echo ; echo ; echo ; echo w;) | fdisk $rootdevicepath
+```
+
 重启
 
 resize2fs $partedpath　扩磁盘空间
 
 
-- 修改内存和CUP
-
----  
+## 修改内存和CUP
+  
 
 1 查看 virsh dominfo test01  
+
 2 改内存 virsh setmem [domain-id or domain-name] [count]  
+
 3 改CUP virsh setvcpus test01 2 
 
-[原文](https://www.cnblogs.com/zhangeamon/p/6734275.html)  
+[原文](https://www.cnblogs.com/zhangeamon/p/6734275.html) 
+
+## 管理界面
+
+[webvirtcloud](https://github.com/retspen/webvirtcloud)

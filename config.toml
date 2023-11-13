@@ -3,7 +3,7 @@ staticDir = "static"
 #uglyurls = true 
 baseURL = "https://zhangeamon.top"
 languageCode = "zh-CN"
-title = "故乡的云☁️"
+title = "Let's go 🐌 🐌 🐌"
 theme = "maupassant-hugo"
 googleAnalytics = ""  # UA-XXXXXXXX-X
 
@@ -37,6 +37,7 @@ summaryLength = 140
 
   # 全局开关，你也可以在每一篇内容的 front matter 中针对单篇内容关闭或开启某些功能
   toc = false  # 是否开启目录
+  beian = "辽ICP备2022000054号-1"
 
 ## 友情链接，可以多个
 

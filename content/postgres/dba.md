@@ -2,6 +2,8 @@
 title: "DBA 日常"
 date: 2018-12-19T11:33:43+08:00
 draft: false
+categories: ["postgres"]
+toc : true
 ---
 
 #### 备份 恢复

@@ -29,3 +29,27 @@ distilled 从..中萃取
 robust 精力充沛的
 
 fundamental 基础的 主要的
+
+trademark 商标
+
+affilicate 隶属
+
+reference 参考
+
+constant development 持续发展
+
+convention 约定, 习惯
+
+collateral n. 	抵押物; 担保品;i
+
+mandatory 强制的
+
+simulation 模拟
+
+irrespective 不用关心的
+
+optimally 最优
+
+from scratch 从零开始
+
+

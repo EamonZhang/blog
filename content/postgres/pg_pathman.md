@@ -2,9 +2,12 @@
 title: "pg_pathman 分区表"
 date: 2019-01-24T10:56:06+08:00
 draft: false
+toc: true
+categories: ["postgres"]
+tags: [""]
 ---
 
-#### 介绍
+## 介绍
 
 分区表的诉求在现实的生成中的意义不必多说，pg以前的实现方式多采用触发器，rules实现。数据量上来时性能明显不尽如意。   
 虽然pg10 ，11 版本在分区表的特性上不断发力。但是性能啥还是不够给力。   
@@ -12,13 +15,14 @@ pg_pathman 分区表功能在目前的pg版本10.6 中优势还是非常明显�
 
 在期待pg自身分区表特性的同时，当前的pg10中还是使用pg_pathman来实现分区功能吧。
 
-##### pathman与pg11 对比
+## pathman与pg11 对比
 
-优点:
+优点:  
 支持HASH和RANGE分区，后续会支持LIST分区 支持自动和手动的分区维护  
 为分区表生成更有效的执行计划 通过引入两个自定义的执行计划节点RuntimeAppend & RuntimeMergeAppend，  
 实现运行时动态添加分区到执行计划中 为新插入数据自动创建分区(只对RANGE分区) 提供用户callbacks接口处理创建分区事件。   
  提供在线分区实施(在线重定义)，父表数据迁移到子表，拆分， 合并分区
+
 不足:   
 不支持list分区;不支持二级分区;权限，索引，trigger等无法继承; 修改主键默认的seq需要重建分区。    
 
@@ -26,8 +30,11 @@ PG11内置分区
 优点:   
 支持hash，range，list分区 支持多字段组合分区，支持表达式分区 支持创建主键，外键，索引，分区表自动继承。 支持update分区键 支持分区表DETACH，ATTACH，支持二级分区 分区自动创建   
 Default partition Partition improvements   
+
 不足:   
+
 在主表添加权限，索引，trigger等无法继承 分区表不可以作为其他表的外键主表   
+
 
 
 #### 分区表数量对插入数据的影响
@@ -75,9 +82,9 @@ FATAL:  could not load library "/usr/pgsql-12/lib/pg_pathman.so": /usr/pgsql-12/
 postgres 版本问题
 ```
 
-#### 简单应用
+## 简单应用
 
-1 将现有表分区，禁止数据迁移
+1 创建表分区，禁止数据迁移
 
 2 并行迁移数据
 
@@ -128,7 +135,7 @@ select set_enable_parent('log'::regclass,false);
 select count(1) from only log;
 ```
 
-#### 分区表常用管理
+## 分区表常用管理
 
 将一个分区拆分为两个分区
 ```
@@ -184,7 +191,7 @@ attach_range_partition(parent_relid    REGCLASS,
                        end_value       ANYELEMENT)
 ```
 
-##### 参数
+## 参数
 
 修改默认分区间隔
 ```
@@ -201,7 +208,7 @@ set_enable_parent(relation REGCLASS, value BOOLEAN)
 set_auto(relation REGCLASS, value BOOLEAN)
 ```
 
-#### 遗留问题
+## 遗留问题
 
 1 原表分区后数据磁盘占用增加近一倍，需要vacuum full 解决. 主表残留
 
@@ -209,7 +216,7 @@ set_auto(relation REGCLASS, value BOOLEAN)
 
 2 分区后对父表添加或删除索引操作对现有分区表不产生作用，仅对新生成的分区有效。[How do I create indexes?](https://github.com/postgrespro/pg_pathman/wiki/How-do-I-create-indexes%3F)
 
-#### 注意事项
+## 注意事项
 
 对已经分区的表使用copy 方式导入数据后数据只存在于父表中，此时执行partition_table_concurrently 无效果
 
@@ -223,3 +230,20 @@ set_auto(relation REGCLASS, value BOOLEAN)
 ```
  3 partition_table_concurrently
 ```
+
+分区表与原生表比较。管理上带来了很大的便利，尤其是数据的归档整理。
+
+性能上反而可能会变得更差，查询条件一定要带上分区健，否则会扫描所有子表。
+
+当单个索引的大小超过物理内存的一半时考虑分表
+
+## 遇见过的错误 
+
+```
+ERROR:  unrecognized node type: 369
+背景:  SQL statement "select public.create_single_range_partition
+```
+
+解决： https://github.com/postgrespro/pg_pathman/issues/224
+
+将 1.5.11 升级至 1.5.12 
